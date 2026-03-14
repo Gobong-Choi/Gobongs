@@ -1,0 +1,902 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LS증권 세무처리 자동화</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#1F4E79;--blue:#2E75B6;--lblue:#D6E4F0;
+  --green:#2E7D32;--lgreen:#E8F5E9;
+  --red:#C00000;--lred:#FFEBEE;
+  --orange:#E65100;--lorange:#FFF3E0;
+  --gain:#0070C0;--loss:#C00000;
+  --lyellow:#FFF9C4;
+  --bg:#F4F6F9;--surface:#fff;--surface2:#F8FAFC;
+  --border:#E2E8F0;--border2:#CBD5E1;
+  --text:#1E293B;--text2:#64748B;--text3:#94A3B8;
+  --radius:8px;--radius-lg:12px;
+  --shadow:0 1px 3px rgba(0,0,0,.08),0 1px 2px rgba(0,0,0,.04);
+}
+body{font-family:'Pretendard','Noto Sans KR','Segoe UI',sans-serif;font-size:13px;background:var(--bg);color:var(--text);min-height:100vh}
+
+/* Header */
+.header{background:linear-gradient(135deg,#1F4E79 0%,#2E75B6 100%);color:#fff;padding:0;box-shadow:0 2px 12px rgba(31,78,121,.3)}
+.header-inner{max-width:1200px;margin:0 auto;padding:16px 24px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.header-brand{display:flex;align-items:center;gap:12px}
+.header-icon{width:38px;height:38px;background:rgba(255,255,255,.15);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px}
+.header-title{font-size:16px;font-weight:700;letter-spacing:-.3px}
+.header-sub{font-size:11px;opacity:.7;margin-top:2px}
+.header-right{display:flex;gap:8px;align-items:center}
+.status-pill{font-size:11px;background:rgba(255,255,255,.15);padding:3px 12px;border-radius:20px;border:1px solid rgba(255,255,255,.25)}
+.btn-ghost{background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.25);padding:5px 12px;border-radius:6px;cursor:pointer;font-size:11.5px;font-weight:500;transition:background .15s}
+.btn-ghost:hover{background:rgba(255,255,255,.22)}
+
+/* Main layout */
+.main{max-width:1200px;margin:0 auto;padding:20px 24px}
+
+/* Tabs */
+.tab-nav{display:flex;gap:2px;background:var(--surface);border-radius:10px;padding:4px;box-shadow:var(--shadow);margin-bottom:18px;overflow-x:auto}
+.tab-btn{flex:1;min-width:max-content;padding:8px 12px;border:none;border-radius:7px;cursor:pointer;font-size:12px;font-weight:500;background:transparent;color:var(--text2);transition:all .15s;white-space:nowrap}
+.tab-btn.active{background:var(--navy);color:#fff;box-shadow:0 1px 4px rgba(31,78,121,.3)}
+.tab-btn.locked{opacity:.38;cursor:not-allowed;pointer-events:none}
+.tab-btn:not(.active):not(.locked):hover{background:var(--surface2);color:var(--text)}
+
+/* Panel */
+.panel{display:none}.panel.active{display:block}
+
+/* Card */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:18px;margin-bottom:14px;box-shadow:var(--shadow)}
+.card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;gap:8px}
+.card-title{font-size:13.5px;font-weight:600;color:var(--text);display:flex;align-items:center;gap:6px}
+.card-title .icon{font-size:15px}
+
+/* Upload zone */
+.upload-zone{border:2px dashed var(--border2);border-radius:var(--radius-lg);padding:32px 24px;text-align:center;cursor:pointer;transition:all .2s;background:var(--surface2)}
+.upload-zone:hover,.upload-zone.drag{border-color:var(--blue);background:#EBF3FB}
+.upload-icon-big{font-size:36px;margin-bottom:10px}
+.upload-text{font-size:14px;font-weight:500;color:var(--text);margin-bottom:4px}
+.upload-sub{font-size:12px;color:var(--text2)}
+
+/* File items */
+.file-item{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:var(--lgreen);border-radius:8px;border:1px solid #A5D6A7;margin-bottom:6px}
+.file-nm{font-size:12px;font-weight:600;color:#1B5E20}
+.file-sub{font-size:10.5px;color:#4CAF50;margin-top:1px}
+
+/* Buttons */
+.btn{padding:8px 16px;border-radius:7px;border:1px solid var(--border2);cursor:pointer;font-size:12px;font-weight:500;background:var(--surface);color:var(--text);transition:all .15s}
+.btn:hover{background:var(--surface2);border-color:var(--blue)}
+.btn-primary{background:var(--navy);color:#fff;border-color:var(--navy)}
+.btn-primary:hover{background:var(--blue)}
+.btn-success{background:var(--green);color:#fff;border-color:var(--green)}
+.btn-success:hover{background:#388E3C}
+.btn-sm{padding:5px 11px;font-size:11.5px}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.btn-dl{display:inline-flex;align-items:center;gap:5px;padding:8px 14px;border-radius:7px;border:1px solid var(--border2);cursor:pointer;font-size:12px;font-weight:500;background:var(--surface);color:var(--text);transition:all .15s;text-decoration:none}
+.btn-dl:hover{background:var(--surface2)}
+
+/* Alerts */
+.alert{border-radius:8px;padding:11px 14px;margin-bottom:12px;font-size:12px;line-height:1.65}
+.alert-title{font-weight:600;margin-bottom:4px;display:flex;align-items:center;gap:5px;font-size:12.5px}
+.alert-success{background:#E8F5E9;border:1px solid #C8E6C9;color:#1B5E20}
+.alert-error{background:#FFEBEE;border:1px solid #FFCDD2;color:#B71C1C}
+.alert-warn{background:#FFF8E1;border:1px solid #FFE082;color:#E65100}
+.alert-info{background:#E3F2FD;border:1px solid #BBDEFB;color:#0D47A1}
+
+/* Stats grid */
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px}
+.stat-card{background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius);padding:12px;text-align:center}
+.stat-label{font-size:10.5px;color:var(--text2);margin-bottom:4px}
+.stat-val{font-size:20px;font-weight:700;color:var(--text)}
+.stat-val.gain{color:var(--gain)}.stat-val.loss{color:var(--loss)}
+
+/* Controls bar */
+.controls{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:12px}
+.method-btn{padding:5px 14px;border-radius:20px;border:1px solid var(--border2);cursor:pointer;font-size:12px;background:var(--surface);color:var(--text2);transition:all .15s}
+.method-btn.active{background:var(--navy);color:#fff;border-color:var(--navy)}
+.ctrl-label{font-size:12px;color:var(--text2)}
+select{padding:6px 10px;border-radius:7px;border:1px solid var(--border2);font-size:12px;background:var(--surface);color:var(--text);cursor:pointer}
+select:hover{border-color:var(--blue)}
+
+/* Table */
+.tbl-wrap{border-radius:8px;border:1px solid var(--border);overflow:hidden}
+.tbl-scroll{overflow-x:auto;max-height:420px;overflow-y:auto}
+table{width:100%;border-collapse:collapse;font-size:11.5px}
+thead tr{background:var(--navy);position:sticky;top:0;z-index:2}
+thead th{color:#fff;padding:8px 10px;text-align:center;font-weight:500;white-space:nowrap}
+tbody tr{border-bottom:1px solid var(--border)}
+tbody tr:last-child{border:none}
+tbody tr:hover{background:#F8FAFC}
+tbody tr.buy{background:#F0F9FF}tbody tr.sell{background:#FFF8F0}
+tbody tr.buy:hover{background:#E3F2FD}tbody tr.sell:hover{background:#FFF3E0}
+tbody tr.err-row{background:#FFEBEE!important}
+td{padding:6px 10px;text-align:right;white-space:nowrap}
+td.l{text-align:left}td.c{text-align:center}
+td.nm{max-width:210px;overflow:hidden;text-overflow:ellipsis;text-align:left}
+
+/* Badges */
+.badge{display:inline-block;padding:1px 7px;border-radius:4px;font-size:10.5px;font-weight:600}
+.badge-buy{background:#E3F2FD;color:#1565C0}
+.badge-sell{background:#FFF3E0;color:#E65100}
+.badge-ok{background:#E8F5E9;color:#2E7D32}
+.badge-err{background:#FFEBEE;color:#C62828}
+.badge-warn{background:#FFF8E1;color:#E65100}
+
+/* Validation checks */
+.vcheck{display:flex;align-items:flex-start;gap:10px;padding:9px 0;border-bottom:1px solid var(--border)}
+.vcheck:last-child{border:none}
+.vcheck-icon{font-size:15px;flex-shrink:0;margin-top:1px}
+.vcheck-title{font-size:12.5px;font-weight:500}
+.vcheck-desc{font-size:11px;color:var(--text2);margin-top:2px}
+
+/* Verify bar */
+.verify-bar{display:flex;gap:14px;align-items:center;padding:9px 14px;border-radius:8px;font-size:12px;margin-bottom:12px}
+.vbar-ok{background:var(--lgreen);border:1px solid #C8E6C9}
+.vbar-ng{background:#FFEBEE;border:1px solid #FFCDD2}
+
+/* Journal */
+.je-block{border-left:3px solid var(--blue);padding:9px 14px;margin-bottom:7px;background:var(--surface2);border-radius:0 8px 8px 0}
+.je-head{font-size:10.5px;color:var(--text2);margin-bottom:6px;display:flex;justify-content:space-between}
+.je-row{display:grid;grid-template-columns:1fr 100px 1fr 100px;gap:6px;align-items:center;padding:3px 0;border-bottom:1px solid var(--border);font-size:11.5px}
+.je-row:last-child{border:none}
+.je-dr{color:var(--red);font-weight:500}
+.je-cr{color:var(--gain);font-weight:500;text-align:right}
+.je-amt{font-weight:600;text-align:right}
+
+/* Inventory */
+.inv-row{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-bottom:1px solid var(--border);font-size:12px}
+.inv-row:last-child{border:none}
+.inv-nm{font-weight:500}
+.inv-meta{display:flex;gap:18px;color:var(--text2);font-size:11px}
+.inv-book{font-weight:700;color:var(--navy);font-size:12.5px}
+
+/* Summary */
+.yr-block{margin-bottom:16px}
+.yr-head{background:var(--blue);color:#fff;padding:10px 16px;border-radius:8px 8px 0 0;font-size:12.5px;font-weight:600;display:flex;justify-content:space-between;align-items:center}
+
+/* Download grid */
+.dl-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.dl-card{background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius);padding:14px}
+.dl-card-title{font-size:12.5px;font-weight:600;margin-bottom:4px}
+.dl-card-desc{font-size:11px;color:var(--text2);margin-bottom:10px}
+.dl-btns{display:flex;gap:7px;flex-wrap:wrap}
+
+/* Guide steps */
+.step{display:flex;gap:12px;padding:12px 0;border-bottom:1px solid var(--border)}
+.step:last-child{border:none}
+.step-num{width:26px;height:26px;border-radius:50%;background:var(--navy);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0}
+.step-title{font-size:12.5px;font-weight:600;margin-bottom:3px}
+.step-desc{font-size:11.5px;color:var(--text2);line-height:1.6}
+.step-code{background:var(--surface2);border:1px solid var(--border);border-radius:5px;padding:8px 12px;font-family:'Courier New',monospace;font-size:11.5px;margin-top:6px;color:var(--navy)}
+
+/* Tags */
+.tag{display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;background:var(--lblue);color:var(--navy);font-weight:500}
+
+/* Empty */
+.empty{text-align:center;padding:36px;color:var(--text3);font-size:12px}
+
+/* Toast */
+#toast{position:fixed;bottom:24px;right:24px;padding:11px 18px;border-radius:8px;font-size:12.5px;font-weight:500;z-index:9999;max-width:340px;box-shadow:0 4px 12px rgba(0,0,0,.15);transition:opacity .3s;display:none}
+
+/* Footer */
+.footer{text-align:center;padding:24px;font-size:11px;color:var(--text3);border-top:1px solid var(--border);margin-top:8px}
+
+@media(max-width:640px){
+  .stats-grid{grid-template-columns:repeat(2,1fr)}
+  .dl-grid{grid-template-columns:1fr}
+  .je-row{grid-template-columns:1fr 80px 1fr 80px;font-size:11px}
+  .header-inner{padding:12px 16px}
+  .main{padding:14px 16px}
+}
+
+/* Login overlay */
+#login-overlay{position:fixed;inset:0;background:linear-gradient(135deg,#0F2942 0%,#1F4E79 55%,#2E75B6 100%);display:flex;align-items:center;justify-content:center;z-index:9999;padding:20px}
+.login-box{background:#fff;border-radius:16px;padding:40px 36px;width:100%;max-width:400px;box-shadow:0 20px 60px rgba(0,0,0,.35)}
+.login-logo{width:54px;height:54px;background:linear-gradient(135deg,#1F4E79,#2E75B6);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:28px;margin:0 auto 18px}
+.login-title{text-align:center;font-size:20px;font-weight:700;color:#1E293B;margin-bottom:4px}
+.login-sub{text-align:center;font-size:12px;color:#94A3B8;margin-bottom:28px}
+.login-label{font-size:12px;font-weight:600;color:#475569;margin-bottom:6px;display:block}
+.login-input{width:100%;padding:11px 14px;border:1.5px solid #E2E8F0;border-radius:8px;font-size:13px;color:#1E293B;outline:none;transition:border-color .15s;margin-bottom:4px;font-family:inherit}
+.login-input:focus{border-color:#2E75B6;box-shadow:0 0 0 3px rgba(46,117,182,.12)}
+.login-input.shake{animation:shake .4s}
+@keyframes shake{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-6px)}40%,80%{transform:translateX(6px)}}
+.login-btn{width:100%;padding:12px;background:linear-gradient(135deg,#1F4E79,#2E75B6);color:#fff;border:none;border-radius:8px;font-size:13.5px;font-weight:600;cursor:pointer;transition:opacity .15s;margin-top:14px;letter-spacing:.2px}
+.login-btn:hover{opacity:.88}
+.login-btn:active{transform:scale(.99)}
+.login-error{background:#FFEBEE;border:1px solid #FFCDD2;color:#B71C1C;border-radius:6px;padding:9px 12px;font-size:12px;margin-top:10px;display:none;text-align:center}
+.login-attempts{font-size:11px;color:#94A3B8;text-align:center;margin-top:8px;min-height:16px}
+.login-footer-note{text-align:center;font-size:11px;color:#CBD5E1;margin-top:22px;line-height:1.6}
+</style>
+</head>
+<body>
+
+<div id="login-overlay">
+  <div class="login-box">
+    <div class="login-logo">📊</div>
+    <div class="login-title">LS증권 세무처리</div>
+    <div class="login-sub">접근 권한이 있는 사용자만 이용 가능합니다</div>
+    <label class="login-label" for="login-pw">비밀번호</label>
+    <input type="password" id="login-pw" class="login-input" placeholder="비밀번호를 입력하세요"
+      onkeydown="if(event.key==='Enter')tryLogin()" autocomplete="current-password">
+    <div id="login-error" class="login-error">비밀번호가 올바르지 않습니다</div>
+    <div id="login-attempts" class="login-attempts"></div>
+    <button class="login-btn" onclick="tryLogin()">🔐 로그인</button>
+    <div class="login-footer-note">
+      이 앱은 브라우저에서만 동작합니다<br>
+      업로드한 파일은 서버로 전송되지 않습니다
+    </div>
+  </div>
+</div>
+
+<div class="header">
+  <div class="header-inner">
+    <div class="header-brand">
+      <div class="header-icon">📊</div>
+      <div>
+        <div class="header-title">LS증권 세무처리 자동화</div>
+        <div class="header-sub">FIFO / 이동평균 자동계산 · 위하고 전표 자동생성 · 엑셀 다운로드</div>
+      </div>
+    </div>
+    <div class="header-right">
+      <a href="../index.html" class="btn-ghost" style="text-decoration:none">← 메인으로</a>
+      <span class="status-pill" id="status-pill">데이터 없음</span>
+      <button class="btn-ghost" onclick="clearAll()">초기화</button>
+    </div>
+  </div>
+</div>
+
+<div class="main">
+  <div class="tab-nav">
+    <button class="tab-btn active" id="tb-upload"   onclick="showTab('upload')">① 파일 업로드</button>
+    <button class="tab-btn locked" id="tb-validate" onclick="showTab('validate')">② 데이터 검증</button>
+    <button class="tab-btn locked" id="tb-calc"     onclick="showTab('calc')">③ 손익 계산</button>
+    <button class="tab-btn locked" id="tb-journal"  onclick="showTab('journal')">④ 위하고 전표</button>
+    <button class="tab-btn locked" id="tb-inventory"onclick="showTab('inventory')">⑤ 잔고 현황</button>
+    <button class="tab-btn locked" id="tb-summary"  onclick="showTab('summary')">⑥ 연간 요약</button>
+    <button class="tab-btn locked" id="tb-download" onclick="showTab('download')">⑦ 다운로드</button>
+    <button class="tab-btn locked" id="tb-guide"    onclick="showTab('guide')">📖 사용 가이드</button>
+  </div>
+
+  <!-- ① 업로드 -->
+  <div id="p-upload" class="panel active">
+    <div class="card">
+      <div class="card-header"><div class="card-title"><span class="icon">📥</span>LS증권 거래내역 업로드</div></div>
+      <div id="file-list"></div>
+      <div class="upload-zone" id="drop-zone"
+        onclick="document.getElementById('file-input').click()"
+        ondragover="event.preventDefault();this.classList.add('drag')"
+        ondragleave="this.classList.remove('drag')"
+        ondrop="handleDrop(event)">
+        <input type="file" id="file-input" accept=".xlsx,.xls" multiple onchange="handleFiles(this.files)" style="display:none">
+        <div class="upload-icon-big">📂</div>
+        <div class="upload-text">LS증권 엑셀 파일을 드래그하거나 클릭하세요</div>
+        <div class="upload-sub">여러 연도 파일 동시 업로드 가능 · .xlsx 형식</div>
+      </div>
+    </div>
+    <div class="card" id="preview-card" style="display:none">
+      <div class="card-header"><div class="card-title"><span class="icon">👀</span>미리보기</div></div>
+      <div id="preview-content"></div>
+    </div>
+  </div>
+
+  <!-- ② 검증 -->
+  <div id="p-validate" class="panel">
+    <div class="card">
+      <div class="card-header"><div class="card-title"><span class="icon">🔍</span>데이터 자동 검증</div></div>
+      <div id="validate-content"><div class="empty">파일을 먼저 업로드해 주세요</div></div>
+    </div>
+    <div class="card" id="validate-errors-card" style="display:none">
+      <div class="card-header"><div class="card-title"><span class="icon">⚠️</span>주의 필요 항목</div></div>
+      <div id="validate-errors"></div>
+    </div>
+  </div>
+
+  <!-- ③ 계산 -->
+  <div id="p-calc" class="panel">
+    <div class="controls">
+      <span class="ctrl-label">원가 방법:</span>
+      <button class="method-btn active" onclick="setMethod('fifo',this)">선입선출 (FIFO)</button>
+      <button class="method-btn" onclick="setMethod('mavg',this)">이동평균법</button>
+      <select id="f-item" onchange="renderCalc()"><option value="">전체 종목</option></select>
+      <select id="f-type" onchange="renderCalc()"><option value="">매수+매도</option><option value="매수">매수만</option><option value="매도">매도만</option></select>
+      <select id="f-year" onchange="renderCalc()"><option value="">전체 연도</option></select>
+    </div>
+    <div id="calc-stats" class="stats-grid"></div>
+    <div class="card" style="padding:0;overflow:hidden"><div id="calc-table"></div></div>
+  </div>
+
+  <!-- ④ 전표 -->
+  <div id="p-journal" class="panel">
+    <div class="controls">
+      <span class="ctrl-label">전표 기준:</span>
+      <button class="method-btn active" onclick="setJMethod('fifo',this)">선입선출 (FIFO)</button>
+      <button class="method-btn" onclick="setJMethod('mavg',this)">이동평균법</button>
+      <select id="j-item" onchange="renderJournal()"><option value="">전체 종목</option></select>
+      <select id="j-year" onchange="renderJournal()"><option value="">전체 연도</option></select>
+      <button class="btn btn-success btn-sm" onclick="copyJournal()">📋 클립보드 복사</button>
+    </div>
+    <div id="verify-bar"></div>
+    <div id="journal-list"></div>
+  </div>
+
+  <!-- ⑤ 잔고 -->
+  <div id="p-inventory" class="panel">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title"><span class="icon">📦</span>현재 잔고 — 이동평균 기준</div>
+        <span style="font-size:11px;color:var(--text2)">다음 연도 기초잔고</span>
+      </div>
+      <div id="inv-mavg"></div>
+    </div>
+    <div class="card">
+      <div class="card-header"><div class="card-title"><span class="icon">📦</span>현재 잔고 — FIFO 로트별</div></div>
+      <div id="inv-fifo"></div>
+    </div>
+  </div>
+
+  <!-- ⑥ 요약 -->
+  <div id="p-summary" class="panel"><div id="summary-content"></div></div>
+
+  <!-- ⑦ 다운로드 -->
+  <div id="p-download" class="panel">
+    <div class="card">
+      <div class="card-header"><div class="card-title"><span class="icon">⬇️</span>결과 엑셀 다운로드</div></div>
+      <div class="alert alert-info" style="margin-bottom:16px">
+        <div class="alert-title">💡 다운로드 안내</div>
+        각 버튼을 눌러 파일을 다운로드하세요. 위하고 전표는 엑셀로 열어서 그대로 복사 후 위하고에 붙여넣기 하시면 됩니다.
+      </div>
+      <div class="dl-grid">
+        <div class="dl-card">
+          <div class="dl-card-title" style="color:var(--navy)">📊 손익 계산 결과</div>
+          <div class="dl-card-desc">FIFO / 이동평균 전체 거래내역 및 손익</div>
+          <div class="dl-btns">
+            <button class="btn btn-primary btn-sm" onclick="downloadCalc('fifo')">⬇ FIFO .xlsx</button>
+            <button class="btn btn-primary btn-sm" onclick="downloadCalc('mavg')">⬇ 이동평균 .xlsx</button>
+          </div>
+        </div>
+        <div class="dl-card">
+          <div class="dl-card-title" style="color:var(--green)">📒 위하고 전표</div>
+          <div class="dl-card-desc">위하고 전표입력 양식 (차대변 구성)</div>
+          <div class="dl-btns">
+            <button class="btn btn-success btn-sm" onclick="downloadJournal('fifo')">⬇ 전표 FIFO .xlsx</button>
+            <button class="btn btn-success btn-sm" onclick="downloadJournal('mavg')">⬇ 전표 이동평균 .xlsx</button>
+          </div>
+        </div>
+        <div class="dl-card">
+          <div class="dl-card-title" style="color:var(--orange)">📦 잔고 현황</div>
+          <div class="dl-card-desc">연말 잔고 — 내년 기초잔고 관리용</div>
+          <div class="dl-btns">
+            <button class="btn btn-sm" style="border-color:var(--orange);color:var(--orange)" onclick="downloadInventory()">⬇ 잔고현황 .xlsx</button>
+          </div>
+        </div>
+        <div class="dl-card">
+          <div class="dl-card-title" style="color:#6A1B9A">📈 연간 손익 요약</div>
+          <div class="dl-card-desc">연도별 FIFO vs 이동평균 비교</div>
+          <div class="dl-btns">
+            <button class="btn btn-sm" style="border-color:#6A1B9A;color:#6A1B9A" onclick="downloadSummary()">⬇ 연간요약 .xlsx</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 📖 가이드 -->
+  <div id="p-guide" class="panel">
+    <div class="card">
+      <div class="card-header"><div class="card-title"><span class="icon">📖</span>사용 가이드 — 매년 작업 순서</div></div>
+      <div class="step">
+        <div class="step-num">1</div>
+        <div><div class="step-title">LS증권 HTS에서 거래내역 다운로드</div>
+        <div class="step-desc">HTS → 거래내역 조회 → 기간 설정 → 엑셀 저장<br>파일명 예시: <code>ls증권_2025_거래내역.xlsx</code></div></div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div><div class="step-title">① 파일 업로드 탭에 파일 드래그</div>
+        <div class="step-desc">여러 연도 파일을 한 번에 올릴 수 있습니다. 중복 기간 감지 경고가 표시됩니다.</div></div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div><div class="step-title">② 데이터 검증 탭 확인</div>
+        <div class="step-desc">7가지 항목이 자동 체크됩니다. 빨간 오류는 반드시 수정, 노란 경고는 의도한 거래인지 확인하세요.</div></div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div><div class="step-title">③ 손익 계산 탭에서 방법 선택</div>
+        <div class="step-desc">FIFO 또는 이동평균 중 세무사와 협의한 방법으로 선택하세요.<br><strong>한 번 선택한 방법은 매년 동일하게 유지해야 합니다.</strong></div></div>
+      </div>
+      <div class="step">
+        <div class="step-num">5</div>
+        <div><div class="step-title">④ 위하고 전표 탭 → 전표 입력</div>
+        <div class="step-desc">클립보드 복사 후 위하고 전표입력 화면에 붙여넣기, 또는 ⑦ 다운로드에서 엑셀로 받아 사용하세요.</div></div>
+      </div>
+      <div class="step">
+        <div class="step-num">6</div>
+        <div><div class="step-title">⑤ 잔고 현황 탭 → 연말 잔고 보관</div>
+        <div class="step-desc">연도 마감 전 ⑦ 다운로드 → 잔고현황 .xlsx를 저장해 두세요. 다음 해 기초잔고 관리에 사용됩니다.</div></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header"><div class="card-title"><span class="icon">💡</span>계정과목 참고</div></div>
+      <table style="font-size:12px">
+        <thead><tr><th class="l" style="padding:8px 10px">계정과목</th><th class="l" style="padding:8px 10px">분류</th><th class="l" style="padding:8px 10px">설명</th></tr></thead>
+        <tbody>
+          <tr><td class="l" style="padding:7px 10px;font-weight:500">단기매매증권</td><td class="l" style="padding:7px 10px"><span class="badge badge-buy">유동자산</span></td><td class="l" style="padding:7px 10px;color:var(--text2)">보유 주식/ETF</td></tr>
+          <tr><td class="l" style="padding:7px 10px;font-weight:500">단기매매증권처분이익</td><td class="l" style="padding:7px 10px"><span class="badge badge-ok">영업외수익</span></td><td class="l" style="padding:7px 10px;color:var(--text2)">매도차익</td></tr>
+          <tr><td class="l" style="padding:7px 10px;font-weight:500">단기매매증권처분손실</td><td class="l" style="padding:7px 10px"><span class="badge badge-err">영업외비용</span></td><td class="l" style="padding:7px 10px;color:var(--text2)">매도차손</td></tr>
+          <tr><td class="l" style="padding:7px 10px;font-weight:500">지급수수료</td><td class="l" style="padding:7px 10px"><span class="badge badge-err">영업외비용</span></td><td class="l" style="padding:7px 10px;color:var(--text2)">매도 수수료</td></tr>
+          <tr><td class="l" style="padding:7px 10px;font-weight:500">세금과공과</td><td class="l" style="padding:7px 10px"><span class="badge badge-err">영업외비용</span></td><td class="l" style="padding:7px 10px;color:var(--text2)">증권거래세 (매도 시)</td></tr>
+          <tr><td class="l" style="padding:7px 10px;font-weight:500">보통예금</td><td class="l" style="padding:7px 10px"><span class="badge badge-buy">유동자산</span></td><td class="l" style="padding:7px 10px;color:var(--text2)">증권계좌 연결 보통예금</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div class="footer">LS증권 세무처리 자동화 · 브라우저에서 실행, 서버 전송 없음 · 데이터는 이 탭 안에서만 유지됩니다</div>
+<div id="toast"></div>
+
+<script>
+
+// ── Login ─────────────────────────────────────────────────────
+// SHA-256 해시값으로 비밀번호 저장 (평문 노출 방지)
+// 비밀번호 변경 시 아래 HASH 값만 교체하세요
+// 새 해시 생성: https://emn178.github.io/online-tools/sha256.html
+const PW_HASH = '03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4';
+const SESSION_KEY = 'gobong_auth';
+let loginAttempts = 0;
+const MAX_ATTEMPTS = 5;
+
+async function sha256(str){
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+  return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+}
+
+async function tryLogin(){
+  if(loginAttempts >= MAX_ATTEMPTS){
+    document.getElementById('login-error').textContent = '시도 횟수 초과. 페이지를 새로고침 하세요.';
+    document.getElementById('login-error').style.display = 'block';
+    return;
+  }
+  const pw = document.getElementById('login-pw').value;
+  if(!pw){ shakeInput(); return; }
+  const hash = await sha256(pw);
+  if(hash === PW_HASH){
+    sessionStorage.setItem(SESSION_KEY, '1');
+    document.getElementById('login-overlay').style.opacity = '0';
+    document.getElementById('login-overlay').style.transition = 'opacity .4s';
+    setTimeout(()=>document.getElementById('login-overlay').style.display='none', 400);
+  } else {
+    loginAttempts++;
+    shakeInput();
+    document.getElementById('login-error').style.display = 'block';
+    const left = MAX_ATTEMPTS - loginAttempts;
+    document.getElementById('login-attempts').textContent = left > 0 ? `남은 시도: ${left}회` : '';
+    document.getElementById('login-pw').value = '';
+    document.getElementById('login-pw').focus();
+  }
+}
+
+function shakeInput(){
+  const el = document.getElementById('login-pw');
+  el.classList.remove('shake');
+  void el.offsetWidth;
+  el.classList.add('shake');
+}
+
+// 세션 유지 확인
+(function(){
+  if(sessionStorage.getItem(SESSION_KEY) === '1'){
+    document.getElementById('login-overlay').style.display = 'none';
+  } else {
+    setTimeout(()=>document.getElementById('login-pw').focus(), 300);
+  }
+})();
+
+// ── State ─────────────────────────────────────────────────────
+let allTrades=[], fifoRows=[], mavgRows=[], fifoInv={}, mavgInv={};
+let fifoJ=[], mavgJ=[];
+let currentMethod='fifo', currentJMethod='fifo';
+let uploadedFiles=[], validation={errors:[],warnings:[]};
+
+// ── Utils ─────────────────────────────────────────────────────
+const fmt=n=>n==null?'-':Math.round(n).toLocaleString('ko-KR');
+const fmtG=n=>{if(n==null)return '-';const v=Math.round(n);return(v>=0?'+':'')+v.toLocaleString('ko-KR')};
+
+function showTab(name){
+  const all=['upload','validate','calc','journal','inventory','summary','download','guide'];
+  all.forEach(n=>{
+    document.getElementById('tb-'+n)?.classList.toggle('active',n===name);
+    document.getElementById('p-'+n)?.classList.toggle('active',n===name);
+  });
+  if(name==='validate')renderValidate();
+  if(name==='calc')renderCalc();
+  if(name==='journal')renderJournal();
+  if(name==='inventory')renderInventory();
+  if(name==='summary')renderSummary();
+}
+
+function unlockTabs(){
+  ['validate','calc','journal','inventory','summary','download','guide'].forEach(n=>{
+    document.getElementById('tb-'+n)?.classList.remove('locked');
+  });
+}
+
+// ── File handling ─────────────────────────────────────────────
+function handleDrop(e){e.preventDefault();document.getElementById('drop-zone').classList.remove('drag');handleFiles(e.dataTransfer.files);}
+
+function handleFiles(files){
+  Array.from(files).forEach(f=>{
+    if(!f.name.match(/\.xlsx?$/i)){toast('⚠️ xlsx 파일만 업로드 가능합니다: '+f.name,'warn');return;}
+    const reader=new FileReader();
+    reader.onload=e=>{
+      try{
+        const wb=XLSX.read(e.target.result,{type:'array'});
+        const ws=wb.Sheets[wb.SheetNames[0]];
+        const data=XLSX.utils.sheet_to_json(ws,{header:1,defval:null});
+        const hdr=data[0]||[];
+        if(!hdr.includes('결제일자')||!hdr.includes('거래종류')){
+          toast('⚠️ LS증권 형식이 아닌 파일입니다: '+f.name,'error');return;
+        }
+        const rows=data.slice(1).filter(r=>r[1]&&['보통매수','보통매도','보통매수_KRX','보통매도_KRX'].includes(r[1]));
+        const trades=rows.map(r=>({
+          날짜:String(r[0]||'').trim(),구분:r[1].includes('매수')?'매수':'매도',
+          종목명:String(r[12]||'').trim(),수량:Number(r[2])||0,단가:Number(r[13])||0,
+          금액:Number(r[3])||0,수수료:Number(r[4])||0,제세금:Number(r[15])||0,파일:f.name,
+        })).filter(t=>t.종목명&&t.수량>0);
+        // 중복 기간 경고
+        const exist=new Set(allTrades.map(t=>t.날짜.slice(0,7)));
+        const nw=new Set(trades.map(t=>t.날짜.slice(0,7)));
+        const overlap=[...exist].filter(d=>[...nw].includes(d));
+        if(overlap.length)toast('⚠️ '+overlap[0]+' 등 이미 업로드된 기간과 겹칩니다!','warn');
+        uploadedFiles.push({name:f.name,count:trades.length});
+        allTrades=[...allTrades,...trades];
+        allTrades.sort((a,b)=>a.날짜.localeCompare(b.날짜));
+        processAll();renderFileList();showPreview();unlockTabs();
+        document.getElementById('status-pill').textContent='총 '+allTrades.length+'건 로드됨';
+      }catch(err){toast('파일 오류: '+err.message,'error');}
+    };
+    reader.readAsArrayBuffer(f);
+  });
+}
+
+// ── Calculations ──────────────────────────────────────────────
+function processAll(){
+  const r1=calcFIFO(allTrades);fifoRows=r1.rows;fifoInv=r1.inv;
+  const r2=calcMAvg(allTrades);mavgRows=r2.rows;mavgInv=r2.inv;
+  fifoJ=makeJournals(fifoRows);mavgJ=makeJournals(mavgRows);
+  populateFilters();runValidation();
+}
+
+function calcFIFO(trades){
+  const inv={};const rows=[];
+  for(const t of trades){
+    const nm=t.종목명;if(!inv[nm])inv[nm]=[];
+    if(t.구분==='매수'){
+      inv[nm].push({qty:t.수량,price:t.단가,date:t.날짜});
+      rows.push({...t,취득단가:t.단가,처분원가:null,처분손익:null,잔여수량:inv[nm].reduce((s,x)=>s+x.qty,0),재고부족:false});
+    } else {
+      let remain=t.수량,cost=0,details=[];
+      while(remain>0&&inv[nm].length){
+        const lot=inv[nm][0],use=Math.min(lot.qty,remain);
+        cost+=use*lot.price;details.push(`${lot.date} ${use}주@${lot.price.toLocaleString()}`);
+        lot.qty-=use;remain-=use;if(lot.qty===0)inv[nm].shift();
+      }
+      const avg=t.수량?Math.round(cost/t.수량):0;
+      const gain=t.금액-cost-t.수수료-t.제세금;
+      rows.push({...t,취득단가:avg,처분원가:Math.round(cost),처분손익:Math.round(gain),잔여수량:inv[nm].reduce((s,x)=>s+x.qty,0),재고부족:remain>0,FIFO상세:details.join('|')});
+    }
+  }
+  const invOut={};
+  for(const [nm,lots] of Object.entries(inv)){
+    const qty=lots.reduce((s,x)=>s+x.qty,0);
+    if(qty>0){const total=lots.reduce((s,x)=>s+x.qty*x.price,0);invOut[nm]={qty,avg:Math.round(total/qty),lots};}
+  }
+  return {rows,inv:invOut};
+}
+
+function calcMAvg(trades){
+  const inv={};const rows=[];
+  for(const t of trades){
+    const nm=t.종목명;if(!inv[nm])inv[nm]={qty:0,total:0,avg:0};
+    const d=inv[nm];
+    if(t.구분==='매수'){
+      d.total+=t.금액;d.qty+=t.수량;d.avg=d.qty?Math.round(d.total/d.qty):0;
+      rows.push({...t,취득단가:d.avg,처분원가:null,처분손익:null,잔여수량:d.qty});
+    } else {
+      const cost=Math.round(d.avg*t.수량);
+      const gain=t.금액-cost-t.수수료-t.제세금;
+      d.qty-=t.수량;d.total=d.avg*d.qty;
+      rows.push({...t,취득단가:d.avg,처분원가:cost,처분손익:Math.round(gain),잔여수량:d.qty,재고부족:d.qty<0});
+    }
+  }
+  const invOut={};
+  for(const [nm,d] of Object.entries(inv)){if(d.qty>0)invOut[nm]={qty:d.qty,avg:d.avg};}
+  return {rows,inv:invOut};
+}
+
+function makeJournals(rows){
+  const out=[];
+  for(const r of rows){
+    if(r.구분!=='매도')continue;
+    const cost=r.처분원가||0,gain=r.처분손익||0,fee=r.수수료,tax=r.제세금,sell=r.금액,nm=r.종목명,dt=r.날짜;
+    if(gain>=0){
+      out.push({날짜:dt,종목:nm,적요:`${nm} ${r.수량}주 매도`,차변계정:'보통예금',차변금액:sell,대변계정:'단기매매증권',대변금액:cost,비고:'매도대금'});
+      out.push({날짜:dt,종목:nm,적요:'',차변계정:'',차변금액:null,대변계정:'단기매매증권처분이익',대변금액:gain,비고:'처분이익'});
+    } else {
+      out.push({날짜:dt,종목:nm,적요:`${nm} ${r.수량}주 매도`,차변계정:'보통예금',차변금액:sell,대변계정:'단기매매증권',대변금액:cost+Math.abs(gain),비고:'매도대금'});
+      out.push({날짜:dt,종목:nm,적요:'',차변계정:'단기매매증권처분손실',차변금액:Math.abs(gain),대변계정:'',대변금액:null,비고:'처분손실'});
+    }
+    if(fee>0)out.push({날짜:dt,종목:nm,적요:'수수료',차변계정:'지급수수료',차변금액:fee,대변계정:'보통예금',대변금액:fee,비고:'수수료'});
+    if(tax>0)out.push({날짜:dt,종목:nm,적요:'증권거래세',차변계정:'세금과공과',차변금액:tax,대변계정:'보통예금',대변금액:tax,비고:'증권거래세'});
+  }
+  return out;
+}
+
+// ── Validation ────────────────────────────────────────────────
+function runValidation(){
+  const errors=[],warnings=[];
+  const fifoShort=fifoRows.filter(r=>r.재고부족);
+  if(fifoShort.length)errors.push({type:'재고 부족 (FIFO)',items:fifoShort.map(r=>`${r.날짜} ${r.종목명} ${r.수량}주`),desc:'매수 기록 없이 매도된 항목. 기초잔고 파일이 누락되었을 수 있습니다.'});
+  const negInv=mavgRows.filter(r=>r.잔여수량<0);
+  if(negInv.length)errors.push({type:'잔여수량 음수',items:[...new Set(negInv.map(r=>r.종목명))],desc:'이동평균 계산 중 잔여수량이 음수가 되었습니다.'});
+  const dr=fifoJ.reduce((s,j)=>s+(j.차변금액||0),0),cr=fifoJ.reduce((s,j)=>s+(j.대변금액||0),0);
+  if(Math.abs(dr-cr)>1)errors.push({type:'전표 차대변 불일치 (FIFO)',items:[`차변 ${fmt(dr)} / 대변 ${fmt(cr)}`],desc:'전표 차대변이 맞지 않습니다.'});
+  const noFee=fifoRows.filter(r=>r.구분==='매도'&&r.수수료===0&&r.제세금===0);
+  if(noFee.length)warnings.push({type:'수수료/세금 0원 매도 '+noFee.length+'건',items:noFee.slice(0,5).map(r=>`${r.날짜} ${r.종목명}`),desc:'수수료·세금이 0원인 매도입니다. 정상인지 확인하세요.'});
+  const dayMap={};
+  allTrades.forEach(t=>{const k=t.날짜+'_'+t.종목명;if(!dayMap[k])dayMap[k]=[];dayMap[k].push(t.구분);});
+  const sd=Object.entries(dayMap).filter(([,v])=>v.includes('매수')&&v.includes('매도'));
+  if(sd.length)warnings.push({type:'당일 매수+매도 동시 발생 '+sd.length+'건',items:sd.slice(0,5).map(([k])=>k.replace('_',' ')),desc:'같은 날 같은 종목에 매수·매도가 모두 있습니다.'});
+  validation={errors,warnings};
+}
+
+function renderValidate(){
+  const {errors,warnings}=validation;
+  const checks=[
+    {label:'파일 형식 확인',desc:'LS증권 표준 컬럼 구조',ok:true},
+    {label:'재고 부족 없음',desc:'매도 시 매수 기록 존재',ok:!errors.find(e=>e.type.includes('재고'))},
+    {label:'잔여수량 정상',desc:'음수 잔고 없음',ok:!errors.find(e=>e.type.includes('잔여'))},
+    {label:'전표 차대변 일치',desc:'FIFO 기준 검증',ok:!errors.find(e=>e.type.includes('전표'))},
+    {label:'수수료 정상',desc:'매도 건 수수료·세금 존재',ok:!warnings.find(w=>w.type.includes('수수료'))},
+    {label:'당일 매매 없음',desc:'동일 종목 당일 매수·매도',ok:!warnings.find(w=>w.type.includes('당일'))},
+  ];
+  const allOk=checks.every(c=>c.ok);
+  document.getElementById('validate-content').innerHTML=`
+    <div class="alert ${allOk?'alert-success':errors.length?'alert-error':'alert-warn'}">
+      <div class="alert-title">${allOk?'✅ 모든 검증 통과':''+(errors.length?'❌ 오류 '+errors.length+'건  ':'')+''+(warnings.length?'⚠️ 경고 '+warnings.length+'건':'')}</div>
+      ${allOk?'데이터에 문제가 없습니다. 다음 단계로 진행하세요.':'아래 항목을 확인하세요.'}
+    </div>
+    ${checks.map(c=>`<div class="vcheck"><div class="vcheck-icon">${c.ok?'✅':'❌'}</div><div><div class="vcheck-title">${c.label}</div><div class="vcheck-desc">${c.desc}</div></div></div>`).join('')}`;
+  const ec=document.getElementById('validate-errors-card');
+  if(errors.length||warnings.length){
+    ec.style.display='block';
+    document.getElementById('validate-errors').innerHTML=[...errors.map(e=>({...e,lv:'error'})),...warnings.map(w=>({...w,lv:'warn'}))].map(item=>`
+      <div class="alert alert-${item.lv}" style="margin-bottom:8px">
+        <div class="alert-title">${item.lv==='error'?'❌':'⚠️'} ${item.type}</div>
+        <div style="margin-bottom:5px">${item.desc}</div>
+        ${item.items.slice(0,5).map(i=>`<div style="font-size:11px;background:rgba(0,0,0,.05);padding:2px 8px;border-radius:4px;margin-top:3px">${i}</div>`).join('')}
+      </div>`).join('');
+  } else ec.style.display='none';
+}
+
+function populateFilters(){
+  const items=[...new Set(allTrades.map(t=>t.종목명))].sort();
+  const years=[...new Set(allTrades.map(t=>t.날짜.slice(0,4)))].sort();
+  ['f-item','j-item'].forEach(id=>{
+    document.getElementById(id).innerHTML='<option value="">전체 종목</option>'+items.map(i=>`<option value="${i}">${i}</option>`).join('');
+  });
+  ['f-year','j-year'].forEach(id=>{
+    document.getElementById(id).innerHTML='<option value="">전체 연도</option>'+years.map(y=>`<option value="${y}">${y}년</option>`).join('');
+  });
+}
+
+// ── Render tabs ───────────────────────────────────────────────
+function setMethod(m,btn){
+  currentMethod=m;
+  document.querySelectorAll('#p-calc .method-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');renderCalc();
+}
+function setJMethod(m,btn){
+  currentJMethod=m;
+  document.querySelectorAll('#p-journal .method-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');renderJournal();
+}
+
+function renderFileList(){
+  document.getElementById('file-list').innerHTML=uploadedFiles.map(f=>`
+    <div class="file-item"><div><div class="file-nm">📄 ${f.name}</div><div class="file-sub">${f.count}건 로드됨</div></div><span class="badge badge-ok">완료</span></div>`).join('');
+}
+
+function showPreview(){
+  document.getElementById('preview-card').style.display='block';
+  const items=[...new Set(allTrades.map(t=>t.종목명))];
+  const buys=allTrades.filter(t=>t.구분==='매수').length;
+  const sells=allTrades.filter(t=>t.구분==='매도').length;
+  document.getElementById('preview-content').innerHTML=`
+    <div class="stats-grid">
+      <div class="stat-card"><div class="stat-label">전체 거래</div><div class="stat-val">${allTrades.length}건</div></div>
+      <div class="stat-card"><div class="stat-label">매수</div><div class="stat-val gain">${buys}건</div></div>
+      <div class="stat-card"><div class="stat-label">매도</div><div class="stat-val loss">${sells}건</div></div>
+      <div class="stat-card"><div class="stat-label">종목 수</div><div class="stat-val">${items.length}개</div></div>
+    </div>
+    <div style="font-size:11.5px;color:var(--text2);margin-bottom:10px">기간: ${allTrades[0]?.날짜} ~ ${allTrades[allTrades.length-1]?.날짜}</div>
+    <div style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:14px">${items.map(i=>`<span class="tag">${i}</span>`).join('')}</div>
+    <button class="btn btn-primary" onclick="showTab('validate')">② 데이터 검증하기 →</button>`;
+}
+
+function renderCalc(){
+  if(!allTrades.length)return;
+  const rows=currentMethod==='fifo'?fifoRows:mavgRows;
+  const iF=document.getElementById('f-item').value;
+  const tF=document.getElementById('f-type').value;
+  const yF=document.getElementById('f-year').value.replace('년','');
+  const filtered=rows.filter(r=>(!iF||r.종목명===iF)&&(!tF||r.구분===tF)&&(!yF||r.날짜.startsWith(yF)));
+  const sells=rows.filter(r=>r.구분==='매도');
+  const totalGain=sells.reduce((s,r)=>s+(r.처분손익||0),0);
+  document.getElementById('calc-stats').innerHTML=`
+    <div class="stat-card"><div class="stat-label">매도 건수</div><div class="stat-val">${sells.length}건</div></div>
+    <div class="stat-card"><div class="stat-label">총 처분손익</div><div class="stat-val ${totalGain>=0?'gain':'loss'}">${fmtG(totalGain)}</div></div>
+    <div class="stat-card"><div class="stat-label">총 수수료</div><div class="stat-val">${fmt(rows.reduce((s,r)=>s+r.수수료,0))}</div></div>
+    <div class="stat-card"><div class="stat-label">총 증권거래세</div><div class="stat-val">${fmt(rows.reduce((s,r)=>s+r.제세금,0))}</div></div>`;
+  const m=currentMethod==='fifo'?'FIFO':'이동평균';
+  document.getElementById('calc-table').innerHTML=`
+    <div class="tbl-wrap"><div class="tbl-scroll"><table>
+      <thead><tr><th>날짜</th><th>구분</th><th>종목명</th><th>수량</th><th>거래단가</th><th>거래금액</th><th>수수료</th><th>제세금</th><th>취득단가(${m})</th><th>처분원가</th><th>처분손익</th><th>잔여수량</th></tr></thead>
+      <tbody>${filtered.map(r=>{const g=r.처분손익;return `<tr class="${r.구분==='매수'?'buy':'sell'}${r.재고부족?' err-row':''}">
+        <td class="c">${r.날짜}</td>
+        <td class="c"><span class="badge ${r.구분==='매수'?'badge-buy':'badge-sell'}">${r.구분}</span></td>
+        <td class="nm">${r.종목명}${r.재고부족?'<span class="badge badge-err" style="margin-left:4px">재고부족</span>':''}</td>
+        <td>${fmt(r.수량)}</td><td>${fmt(r.단가)}</td><td>${fmt(r.금액)}</td>
+        <td>${r.수수료?fmt(r.수수료):'-'}</td><td>${r.제세금?fmt(r.제세금):'-'}</td>
+        <td>${fmt(r.취득단가)}</td><td>${r.처분원가!=null?fmt(r.처분원가):'-'}</td>
+        <td style="color:${g!=null?(g>=0?'#0070C0':'#C00000'):'inherit'};font-weight:${g!=null?600:400}">${g!=null?fmtG(g):'-'}</td>
+        <td>${fmt(r.잔여수량)}</td></tr>`;}).join('')}</tbody>
+    </table></div></div>`;
+}
+
+function renderJournal(){
+  if(!allTrades.length)return;
+  const journals=currentJMethod==='fifo'?fifoJ:mavgJ;
+  const iF=document.getElementById('j-item').value;
+  const yF=document.getElementById('j-year').value.replace('년','');
+  const filtered=journals.filter(j=>(!iF||j.종목===iF)&&(!yF||j.날짜.startsWith(yF)));
+  const dr=filtered.reduce((s,j)=>s+(j.차변금액||0),0),cr=filtered.reduce((s,j)=>s+(j.대변금액||0),0);
+  const ok=Math.abs(dr-cr)<1;
+  document.getElementById('verify-bar').innerHTML=`
+    <div class="verify-bar ${ok?'vbar-ok':'vbar-ng'}">
+      <span style="font-weight:600;color:${ok?'#1B5E20':'#B71C1C'}">${ok?'✅ 차대변 일치':'❌ 차대변 불일치'}</span>
+      <span style="font-size:11px">차변: <b>${fmt(dr)}</b></span>
+      <span style="font-size:11px">대변: <b>${fmt(cr)}</b></span>
+      <span style="font-size:11px;color:var(--text2)">${filtered.length}행</span>
+    </div>`;
+  let prev='',html='';
+  for(const j of filtered){
+    if(j.날짜!==prev){if(prev)html+='</div>';html+=`<div class="je-block"><div class="je-head"><span>${j.날짜} | ${j.종목}</span></div>`;prev=j.날짜;}
+    html+=`<div class="je-row">
+      <span class="je-dr">${j.차변계정||'—'}</span>
+      <span class="je-amt" style="color:${j.차변금액?'#C00000':'var(--text3)'}">${j.차변금액?fmt(j.차변금액):''}</span>
+      <span class="je-cr">${j.대변계정||'—'}</span>
+      <span class="je-amt" style="color:${j.대변금액?'#0070C0':'var(--text3)'}">${j.대변금액?fmt(j.대변금액):''}</span>
+    </div>`;
+  }
+  if(prev)html+='</div>';
+  document.getElementById('journal-list').innerHTML=html||'<div class="empty">해당 전표 없음</div>';
+}
+
+function renderInventory(){
+  const m=document.getElementById('inv-mavg'),f=document.getElementById('inv-fifo');
+  if(!Object.keys(mavgInv).length){m.innerHTML='<div class="empty">데이터 없음</div>';f.innerHTML='<div class="empty">데이터 없음</div>';return;}
+  let mHtml='';
+  for(const [nm,d] of Object.entries(mavgInv).sort((a,b)=>a[0].localeCompare(b[0]))){
+    mHtml+=`<div class="inv-row"><div class="inv-nm">${nm}</div><div class="inv-meta"><span>${fmt(d.qty)}주</span><span>평균 ${fmt(d.avg)}원</span><span class="inv-book">${fmt(d.qty*d.avg)}원</span></div></div>`;
+  }
+  const total=Object.values(mavgInv).reduce((s,d)=>s+d.qty*d.avg,0);
+  m.innerHTML=mHtml+`<div style="text-align:right;padding:10px 14px;font-size:12px;font-weight:700;color:var(--navy);border-top:1px solid var(--border)">총 장부금액: ${fmt(total)}원</div>`;
+  let fHtml=`<div class="tbl-wrap"><div class="tbl-scroll"><table><thead><tr><th>종목명</th><th>로트</th><th>취득일</th><th>수량</th><th>취득단가</th><th>취득금액</th></tr></thead><tbody>`;
+  for(const [nm,d] of Object.entries(fifoInv).sort((a,b)=>a[0].localeCompare(b[0]))){
+    d.lots.forEach((lot,i)=>{fHtml+=`<tr><td class="l">${i===0?nm:''}</td><td class="c">${i+1}</td><td class="c">${lot.date}</td><td>${fmt(lot.qty)}</td><td>${fmt(lot.price)}</td><td style="font-weight:600;color:var(--navy)">${fmt(lot.qty*lot.price)}</td></tr>`;});
+  }
+  fHtml+=`</tbody></table></div></div>`;f.innerHTML=fHtml;
+}
+
+function renderSummary(){
+  if(!allTrades.length)return;
+  const years=[...new Set(allTrades.map(t=>t.날짜.slice(0,4)))].sort();
+  let html='';
+  for(const yr of years){
+    const fR=fifoRows.filter(r=>r.날짜.startsWith(yr)&&r.구분==='매도');
+    const mR=mavgRows.filter(r=>r.날짜.startsWith(yr)&&r.구분==='매도');
+    const fT=fR.reduce((s,r)=>s+(r.처분손익||0),0),mT=mR.reduce((s,r)=>s+(r.처분손익||0),0);
+    const items=[...new Set([...fR,...mR].map(r=>r.종목명))].sort();
+    html+=`<div class="yr-block"><div class="yr-head"><span>${yr}년 결과</span><span>FIFO: <b>${fmtG(fT)}</b> | 이동평균: <b>${fmtG(mT)}</b></span></div>
+      <div class="tbl-wrap"><table><thead><tr><th>종목명</th><th>매도금액</th><th>원가(FIFO)</th><th>손익(FIFO)</th><th>원가(이동평균)</th><th>손익(이동평균)</th><th>차이</th></tr></thead>
+      <tbody>${items.map(nm=>{
+        const fi=fR.filter(r=>r.종목명===nm),mi=mR.filter(r=>r.종목명===nm);
+        const fAmt=fi.reduce((s,r)=>s+r.금액,0),fC=fi.reduce((s,r)=>s+(r.처분원가||0),0),fG=fi.reduce((s,r)=>s+(r.처분손익||0),0);
+        const mC=mi.reduce((s,r)=>s+(r.처분원가||0),0),mG=mi.reduce((s,r)=>s+(r.처분손익||0),0),diff=fG-mG;
+        return `<tr><td class="l">${nm}</td><td>${fmt(fAmt)}</td><td>${fmt(fC)}</td>
+          <td style="font-weight:600;color:${fG>=0?'#0070C0':'#C00000'}">${fmtG(fG)}</td>
+          <td>${fmt(mC)}</td><td style="font-weight:600;color:${mG>=0?'#0070C0':'#C00000'}">${fmtG(mG)}</td>
+          <td style="color:${diff>=0?'#0070C0':'#C00000'}">${fmtG(diff)}</td></tr>`;
+      }).join('')}</tbody></table></div></div>`;
+  }
+  document.getElementById('summary-content').innerHTML=html;
+}
+
+// ── Downloads ─────────────────────────────────────────────────
+function dlXlsx(data,filename){
+  const ws=XLSX.utils.aoa_to_sheet(data);
+  const wb=XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb,ws,'Sheet1');
+  XLSX.writeFile(wb,filename);
+  toast('다운로드 완료: '+filename,'success');
+}
+
+function makeCalcAOA(rows,method){
+  const hdr=['날짜','구분','종목명','거래수량','거래단가','거래금액','수수료','제세금',`취득단가(${method})`,'처분원가','처분손익','잔여수량'];
+  return [hdr,...rows.map(r=>[r.날짜,r.구분,r.종목명,r.수량,r.단가,r.금액,r.수수료||0,r.제세금||0,r.취득단가,r.처분원가??'',r.처분손익??'',r.잔여수량])];
+}
+function makeJournalAOA(j){
+  return [['전표일자','종목명','적요','차변 계정과목','차변 금액','대변 계정과목','대변 금액','비고'],...j.map(r=>[r.날짜,r.종목,r.적요,r.차변계정,r.차변금액??'',r.대변계정,r.대변금액??'',r.비고])];
+}
+function makeInvAOA(){
+  const rows=[['종목명','보유수량','이동평균단가','장부금액']];
+  for(const [nm,d] of Object.entries(mavgInv).sort((a,b)=>a[0].localeCompare(b[0])))rows.push([nm,d.qty,d.avg,d.qty*d.avg]);
+  rows.push([''],['종목명','로트','취득일','수량','취득단가','취득금액(FIFO)']);
+  for(const [nm,d] of Object.entries(fifoInv).sort((a,b)=>a[0].localeCompare(b[0])))
+    d.lots.forEach((lot,i)=>rows.push([i===0?nm:'',i+1,lot.date,lot.qty,lot.price,lot.qty*lot.price]));
+  return rows;
+}
+function makeSummaryAOA(){
+  const rows=[['연도','종목명','매도금액','원가(FIFO)','손익(FIFO)','원가(이동평균)','손익(이동평균)','차이']];
+  const years=[...new Set(allTrades.map(t=>t.날짜.slice(0,4)))].sort();
+  for(const yr of years){
+    const fR=fifoRows.filter(r=>r.날짜.startsWith(yr)&&r.구분==='매도');
+    const mR=mavgRows.filter(r=>r.날짜.startsWith(yr)&&r.구분==='매도');
+    const items=[...new Set([...fR,...mR].map(r=>r.종목명))].sort();
+    for(const nm of items){
+      const fi=fR.filter(r=>r.종목명===nm),mi=mR.filter(r=>r.종목명===nm);
+      rows.push([yr,nm,fi.reduce((s,r)=>s+r.금액,0),fi.reduce((s,r)=>s+(r.처분원가||0),0),fi.reduce((s,r)=>s+(r.처분손익||0),0),mi.reduce((s,r)=>s+(r.처분원가||0),0),mi.reduce((s,r)=>s+(r.처분손익||0),0),fi.reduce((s,r)=>s+(r.처분손익||0),0)-mi.reduce((s,r)=>s+(r.처분손익||0),0)]);
+    }
+  }
+  return rows;
+}
+
+function downloadCalc(m){if(!allTrades.length){toast('먼저 파일을 업로드하세요','warn');return;}dlXlsx(makeCalcAOA(m==='fifo'?fifoRows:mavgRows,m==='fifo'?'FIFO':'이동평균'),`LS증권_손익계산_${m==='fifo'?'FIFO':'이동평균'}.xlsx`);}
+function downloadJournal(m){if(!allTrades.length){toast('먼저 파일을 업로드하세요','warn');return;}dlXlsx(makeJournalAOA(m==='fifo'?fifoJ:mavgJ),`위하고_전표_${m==='fifo'?'FIFO':'이동평균'}.xlsx`);}
+function downloadInventory(){if(!allTrades.length){toast('먼저 파일을 업로드하세요','warn');return;}dlXlsx(makeInvAOA(),'LS증권_잔고현황.xlsx');}
+function downloadSummary(){if(!allTrades.length){toast('먼저 파일을 업로드하세요','warn');return;}dlXlsx(makeSummaryAOA(),'LS증권_연간손익요약.xlsx');}
+
+function copyJournal(){
+  const journals=currentJMethod==='fifo'?fifoJ:mavgJ;
+  const iF=document.getElementById('j-item').value,yF=document.getElementById('j-year').value.replace('년','');
+  const filtered=journals.filter(j=>(!iF||j.종목===iF)&&(!yF||j.날짜.startsWith(yF)));
+  const txt=filtered.map(j=>[j.날짜,j.종목,j.적요,j.차변계정,j.차변금액??'',j.대변계정,j.대변금액??'',j.비고].join('\t')).join('\n');
+  navigator.clipboard.writeText(txt).then(()=>toast('클립보드에 복사됐습니다. 엑셀에 붙여넣기 하세요.','success')).catch(()=>toast('복사 실패 — 브라우저 권한을 확인하세요','error'));
+}
+
+function clearAll(){
+  if(!confirm('모든 데이터를 초기화할까요?'))return;
+  allTrades=[];fifoRows=[];mavgRows=[];fifoInv={};mavgInv={};fifoJ=[];mavgJ=[];uploadedFiles=[];
+  document.getElementById('file-list').innerHTML='';
+  document.getElementById('preview-card').style.display='none';
+  document.getElementById('status-pill').textContent='데이터 없음';
+  ['validate','calc','journal','inventory','summary','download','guide'].forEach(n=>document.getElementById('tb-'+n)?.classList.add('locked'));
+  showTab('upload');toast('초기화 완료','info');
+}
+
+let toastTimer;
+function toast(msg,type='info'){
+  const t=document.getElementById('toast');
+  const bg={success:'#E8F5E9',error:'#FFEBEE',warn:'#FFF8E1',info:'#E3F2FD'};
+  const cl={success:'#1B5E20',error:'#B71C1C',warn:'#E65100',info:'#0D47A1'};
+  const bd={success:'#C8E6C9',error:'#FFCDD2',warn:'#FFE082',info:'#BBDEFB'};
+  t.style.background=bg[type];t.style.color=cl[type];t.style.border='1px solid '+bd[type];
+  t.textContent=msg;t.style.display='block';t.style.opacity='1';
+  clearTimeout(toastTimer);toastTimer=setTimeout(()=>{t.style.opacity='0';setTimeout(()=>t.style.display='none',300);},3500);
+}
+</script>
+</body>
+</html>

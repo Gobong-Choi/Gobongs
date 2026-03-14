@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>고봉's</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;600;700&family=Noto+Sans+KR:wght@300;400;500;600&display=swap');
+
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#1F4E79;--blue:#2E75B6;--lblue:#D6E4F0;
+  --bg:#F0F4F8;--surface:#fff;--surface2:#F8FAFC;
+  --border:#E2E8F0;--border2:#CBD5E1;
+  --text:#1E293B;--text2:#64748B;--text3:#94A3B8;
+  --radius:12px;--radius-lg:16px;
+  --shadow:0 2px 8px rgba(0,0,0,.08);
+  --shadow-lg:0 8px 32px rgba(0,0,0,.12);
+}
+
+body{
+  font-family:'Noto Sans KR',sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  min-height:100vh;
+}
+
+/* ── 로그인 오버레이 ─────────────────────────────────────── */
+#login-screen{
+  position:fixed;inset:0;
+  background:linear-gradient(160deg,#0A1A2E 0%,#1F4E79 60%,#2E75B6 100%);
+  display:flex;align-items:center;justify-content:center;
+  z-index:9999;padding:20px;
+}
+.login-wrap{
+  width:100%;max-width:420px;
+  animation:fadeUp .5s ease;
+}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+
+.login-brand{text-align:center;margin-bottom:32px}
+.login-brand-name{
+  font-family:'Noto Serif KR',serif;
+  font-size:42px;font-weight:700;
+  color:#fff;letter-spacing:-1px;
+  text-shadow:0 2px 20px rgba(0,0,0,.3);
+}
+.login-brand-apostrophe{color:#60A5FA}
+.login-brand-sub{font-size:13px;color:rgba(255,255,255,.5);margin-top:6px;letter-spacing:2px;text-transform:uppercase}
+
+.login-card{
+  background:rgba(255,255,255,.97);
+  border-radius:20px;
+  padding:36px 32px;
+  box-shadow:0 24px 64px rgba(0,0,0,.3);
+}
+.login-card-title{font-size:15px;font-weight:600;color:var(--text);margin-bottom:4px;text-align:center}
+.login-card-sub{font-size:12px;color:var(--text3);text-align:center;margin-bottom:24px}
+
+.form-group{margin-bottom:16px}
+.form-label{display:block;font-size:12px;font-weight:600;color:var(--text2);margin-bottom:6px}
+.form-input{
+  width:100%;padding:12px 14px;
+  border:1.5px solid var(--border2);border-radius:10px;
+  font-size:13.5px;color:var(--text);
+  font-family:'Noto Sans KR',sans-serif;
+  outline:none;transition:all .15s;
+  background:var(--surface2);
+}
+.form-input:focus{border-color:var(--blue);background:#fff;box-shadow:0 0 0 3px rgba(46,117,182,.1)}
+.form-input.shake{animation:shake .4s}
+@keyframes shake{0%,100%{transform:translateX(0)}25%,75%{transform:translateX(-6px)}50%{transform:translateX(6px)}}
+
+.login-btn{
+  width:100%;padding:13px;margin-top:6px;
+  background:linear-gradient(135deg,var(--navy),var(--blue));
+  color:#fff;border:none;border-radius:10px;
+  font-size:14px;font-weight:600;
+  font-family:'Noto Sans KR',sans-serif;
+  cursor:pointer;letter-spacing:.3px;
+  transition:opacity .15s,transform .1s;
+  box-shadow:0 4px 14px rgba(31,78,121,.35);
+}
+.login-btn:hover{opacity:.9}
+.login-btn:active{transform:scale(.99)}
+
+.login-error{
+  background:#FEF2F2;border:1px solid #FECACA;color:#991B1B;
+  border-radius:8px;padding:9px 12px;
+  font-size:12px;text-align:center;
+  margin-top:12px;display:none;
+}
+.login-attempts{font-size:11px;color:var(--text3);text-align:center;margin-top:8px;min-height:16px}
+.login-note{font-size:11px;color:var(--text3);text-align:center;margin-top:20px;line-height:1.7}
+
+/* ── 메인 앱 (로그인 후) ──────────────────────────────────── */
+#main-app{display:none}
+
+/* 헤더 */
+.site-header{
+  background:linear-gradient(135deg,#0F2942 0%,var(--navy) 100%);
+  padding:0;
+  box-shadow:0 2px 12px rgba(0,0,0,.2);
+  position:sticky;top:0;z-index:100;
+}
+.site-header-inner{
+  max-width:1200px;margin:0 auto;
+  padding:14px 28px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.site-brand{
+  font-family:'Noto Serif KR',serif;
+  font-size:26px;font-weight:700;color:#fff;
+  letter-spacing:-0.5px;text-decoration:none;
+  display:flex;align-items:baseline;gap:2px;
+}
+.site-brand .apostrophe{color:#60A5FA}
+.site-brand .tagline{font-family:'Noto Sans KR',sans-serif;font-size:11px;font-weight:300;color:rgba(255,255,255,.45);margin-left:10px;letter-spacing:1px}
+.header-actions{display:flex;align-items:center;gap:12px}
+.user-pill{
+  display:flex;align-items:center;gap:7px;
+  background:rgba(255,255,255,.1);
+  border:1px solid rgba(255,255,255,.2);
+  border-radius:20px;padding:5px 12px 5px 8px;
+  font-size:12px;color:#fff;
+}
+.user-avatar{
+  width:22px;height:22px;border-radius:50%;
+  background:linear-gradient(135deg,#60A5FA,#3B82F6);
+  display:flex;align-items:center;justify-content:center;
+  font-size:11px;font-weight:700;color:#fff;
+}
+.logout-btn{
+  background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.2);
+  color:rgba(255,255,255,.7);
+  padding:5px 12px;border-radius:6px;
+  font-size:11.5px;font-family:'Noto Sans KR',sans-serif;
+  cursor:pointer;transition:all .15s;
+}
+.logout-btn:hover{background:rgba(255,255,255,.16);color:#fff}
+
+/* 메인 콘텐츠 */
+.main-content{max-width:1200px;margin:0 auto;padding:36px 28px}
+
+.section-header{margin-bottom:24px}
+.section-title{
+  font-size:22px;font-weight:600;color:var(--text);
+  letter-spacing:-.3px;margin-bottom:4px;
+}
+.section-sub{font-size:13px;color:var(--text2)}
+
+/* 앱 그리드 */
+.app-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(280px,1fr));
+  gap:18px;
+}
+
+/* 앱 카드 */
+.app-card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:var(--radius-lg);
+  padding:24px;
+  cursor:pointer;
+  transition:all .2s;
+  box-shadow:var(--shadow);
+  position:relative;
+  overflow:hidden;
+  text-decoration:none;
+  display:block;
+}
+.app-card::before{
+  content:'';position:absolute;inset:0;
+  opacity:0;transition:opacity .2s;
+}
+.app-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-lg)}
+.app-card:hover::before{opacity:1}
+.app-card:active{transform:translateY(-1px)}
+
+/* 카드 색상 테마 */
+.theme-blue::before{background:linear-gradient(135deg,rgba(46,117,182,.04),rgba(31,78,121,.03))}
+.theme-blue .card-icon-bg{background:linear-gradient(135deg,#EBF3FB,#D6E4F0)}
+.theme-blue .card-icon{color:var(--navy)}
+.theme-blue .card-tag{background:#EBF3FB;color:var(--navy)}
+.theme-blue:hover{border-color:#93C4E0}
+
+.theme-green::before{background:linear-gradient(135deg,rgba(46,125,50,.04),rgba(27,94,32,.03))}
+.theme-green .card-icon-bg{background:linear-gradient(135deg,#E8F5E9,#C8E6C9)}
+.theme-green .card-icon{color:#1B5E20}
+.theme-green .card-tag{background:#E8F5E9;color:#1B5E20}
+.theme-green:hover{border-color:#81C784}
+
+.theme-purple::before{background:linear-gradient(135deg,rgba(106,27,154,.04),rgba(74,20,140,.03))}
+.theme-purple .card-icon-bg{background:linear-gradient(135deg,#F3E5F5,#E1BEE7)}
+.theme-purple .card-icon{color:#4A148C}
+.theme-purple .card-tag{background:#F3E5F5;color:#4A148C}
+.theme-purple:hover{border-color:#CE93D8}
+
+.theme-orange::before{background:linear-gradient(135deg,rgba(230,81,0,.04),rgba(191,54,12,.03))}
+.theme-orange .card-icon-bg{background:linear-gradient(135deg,#FFF3E0,#FFE0B2)}
+.theme-orange .card-icon{color:#BF360C}
+.theme-orange .card-tag{background:#FFF3E0;color:#BF360C}
+.theme-orange:hover{border-color:#FFAB40}
+
+/* 준비중 카드 */
+.app-card.coming-soon{cursor:default;opacity:.65}
+.app-card.coming-soon:hover{transform:none;box-shadow:var(--shadow)}
+.coming-badge{
+  position:absolute;top:14px;right:14px;
+  background:#F1F5F9;color:var(--text3);
+  font-size:10px;font-weight:600;
+  padding:3px 8px;border-radius:20px;
+  letter-spacing:.5px;
+}
+
+.card-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:16px}
+.card-icon-bg{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center}
+.card-icon{font-size:24px}
+.card-tag{font-size:10.5px;font-weight:600;padding:3px 9px;border-radius:20px;letter-spacing:.3px}
+
+.card-title{font-size:16px;font-weight:600;color:var(--text);margin-bottom:6px;letter-spacing:-.2px}
+.card-desc{font-size:12.5px;color:var(--text2);line-height:1.65;margin-bottom:16px}
+.card-features{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:16px}
+.card-feature{
+  font-size:11px;color:var(--text2);
+  background:var(--surface2);border:1px solid var(--border);
+  padding:2px 8px;border-radius:4px;
+}
+.card-footer{
+  display:flex;align-items:center;justify-content:space-between;
+  padding-top:14px;border-top:1px solid var(--border);
+  font-size:12px;color:var(--text3);
+}
+.card-arrow{
+  width:28px;height:28px;border-radius:50%;
+  background:var(--surface2);border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;
+  font-size:13px;transition:all .2s;
+}
+.app-card:hover .card-arrow{background:var(--navy);border-color:var(--navy);color:#fff}
+
+/* 섹션 구분 */
+.section-divider{
+  display:flex;align-items:center;gap:14px;
+  margin:32px 0 20px;
+}
+.section-divider-line{flex:1;height:1px;background:var(--border)}
+.section-divider-text{font-size:12px;font-weight:600;color:var(--text3);letter-spacing:1px;text-transform:uppercase;white-space:nowrap}
+
+/* 푸터 */
+.site-footer{
+  text-align:center;padding:28px;
+  font-size:11.5px;color:var(--text3);
+  border-top:1px solid var(--border);
+  margin-top:40px;
+}
+.site-footer strong{color:var(--text2);font-family:'Noto Serif KR',serif}
+
+/* 환영 배너 */
+.welcome-banner{
+  background:linear-gradient(135deg,var(--navy) 0%,var(--blue) 100%);
+  border-radius:var(--radius-lg);
+  padding:24px 28px;
+  color:#fff;
+  margin-bottom:28px;
+  display:flex;align-items:center;justify-content:space-between;
+  gap:16px;flex-wrap:wrap;
+  box-shadow:0 4px 20px rgba(31,78,121,.25);
+}
+.welcome-text h2{font-size:18px;font-weight:600;margin-bottom:4px}
+.welcome-text p{font-size:12.5px;opacity:.75}
+.welcome-stats{display:flex;gap:20px}
+.welcome-stat{text-align:center}
+.welcome-stat-val{font-size:22px;font-weight:700;line-height:1}
+.welcome-stat-label{font-size:10.5px;opacity:.65;margin-top:3px}
+
+@media(max-width:640px){
+  .main-content{padding:20px 16px}
+  .site-header-inner{padding:12px 16px}
+  .welcome-banner{padding:18px}
+  .welcome-stats{gap:14px}
+  .app-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- ── 로그인 화면 ─────────────────────────────────────── -->
+<div id="login-screen">
+  <div class="login-wrap">
+    <div class="login-brand">
+      <div class="login-brand-name">고봉<span class="login-brand-apostrophe">'</span>s</div>
+      <div class="login-brand-sub">Personal Management Portal</div>
+    </div>
+    <div class="login-card">
+      <div class="login-card-title">로그인</div>
+      <div class="login-card-sub">접근 권한이 있는 사용자만 이용 가능합니다</div>
+      <div class="form-group">
+        <label class="form-label" for="login-pw">비밀번호</label>
+        <input type="password" id="login-pw" class="form-input"
+          placeholder="비밀번호를 입력하세요"
+          onkeydown="if(event.key==='Enter')tryLogin()"
+          autocomplete="current-password">
+      </div>
+      <button class="login-btn" onclick="tryLogin()">🔐 로그인</button>
+      <div id="login-error" class="login-error">비밀번호가 올바르지 않습니다</div>
+      <div id="login-attempts" class="login-attempts"></div>
+      <div class="login-note">
+        데이터는 브라우저에서만 처리됩니다<br>서버로 전송되지 않습니다
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── 메인 앱 ─────────────────────────────────────────── -->
+<div id="main-app">
+
+  <header class="site-header">
+    <div class="site-header-inner">
+      <a href="#" class="site-brand">
+        고봉<span class="apostrophe">'</span>s
+        <span class="tagline">Management Portal</span>
+      </a>
+      <div class="header-actions">
+        <div class="user-pill">
+          <div class="user-avatar">고</div>
+          <span>고봉</span>
+        </div>
+        <button class="logout-btn" onclick="doLogout()">로그아웃</button>
+      </div>
+    </div>
+  </header>
+
+  <div class="main-content">
+
+    <!-- 환영 배너 -->
+    <div class="welcome-banner">
+      <div class="welcome-text">
+        <h2>안녕하세요, 고봉님 👋</h2>
+        <p>오늘도 효율적인 업무를 시작하세요</p>
+      </div>
+      <div class="welcome-stats">
+        <div class="welcome-stat">
+          <div class="welcome-stat-val" id="app-count">1</div>
+          <div class="welcome-stat-label">활성 앱</div>
+        </div>
+        <div class="welcome-stat">
+          <div class="welcome-stat-val" id="today-date"></div>
+          <div class="welcome-stat-label">오늘 날짜</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 업무 도구 섹션 -->
+    <div class="section-header">
+      <div class="section-title">업무 도구</div>
+      <div class="section-sub">자주 사용하는 앱에 빠르게 접근하세요</div>
+    </div>
+
+    <div class="app-grid">
+
+      <!-- LS증권 세무처리 -->
+      <a href="./ls-tax/index.html" class="app-card theme-blue">
+        <div class="card-top">
+          <div class="card-icon-bg"><div class="card-icon">📊</div></div>
+          <span class="card-tag">세무 · 회계</span>
+        </div>
+        <div class="card-title">LS증권 세무처리</div>
+        <div class="card-desc">LS증권 거래내역을 업로드하면 FIFO / 이동평균 손익을 자동 계산하고 위하고 전표를 생성합니다.</div>
+        <div class="card-features">
+          <span class="card-feature">FIFO 계산</span>
+          <span class="card-feature">이동평균법</span>
+          <span class="card-feature">위하고 전표</span>
+          <span class="card-feature">엑셀 다운로드</span>
+        </div>
+        <div class="card-footer">
+          <span>마지막 업데이트: 2025</span>
+          <div class="card-arrow">→</div>
+        </div>
+      </a>
+
+      <!-- 준비중 카드 1 -->
+      <div class="app-card theme-green coming-soon">
+        <span class="coming-badge">COMING SOON</span>
+        <div class="card-top">
+          <div class="card-icon-bg"><div class="card-icon">📋</div></div>
+          <span class="card-tag">관리</span>
+        </div>
+        <div class="card-title">두 번째 앱</div>
+        <div class="card-desc">준비 중입니다. 곧 추가될 예정입니다.</div>
+        <div class="card-features">
+          <span class="card-feature">준비중</span>
+        </div>
+        <div class="card-footer">
+          <span>개발 예정</span>
+          <div class="card-arrow">→</div>
+        </div>
+      </div>
+
+      <!-- 준비중 카드 2 -->
+      <div class="app-card theme-purple coming-soon">
+        <span class="coming-badge">COMING SOON</span>
+        <div class="card-top">
+          <div class="card-icon-bg"><div class="card-icon">📈</div></div>
+          <span class="card-tag">분석</span>
+        </div>
+        <div class="card-title">세 번째 앱</div>
+        <div class="card-desc">준비 중입니다. 곧 추가될 예정입니다.</div>
+        <div class="card-features">
+          <span class="card-feature">준비중</span>
+        </div>
+        <div class="card-footer">
+          <span>개발 예정</span>
+          <div class="card-arrow">→</div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- 추가 예정 섹션 -->
+    <div class="section-divider">
+      <div class="section-divider-line"></div>
+      <div class="section-divider-text">앞으로 추가될 앱</div>
+      <div class="section-divider-line"></div>
+    </div>
+
+    <div class="app-grid">
+      <div class="app-card theme-orange coming-soon">
+        <span class="coming-badge">PLANNED</span>
+        <div class="card-top">
+          <div class="card-icon-bg"><div class="card-icon">💰</div></div>
+          <span class="card-tag">재무</span>
+        </div>
+        <div class="card-title">네 번째 앱</div>
+        <div class="card-desc">추가 예정입니다. 필요한 앱이 있으면 말씀해 주세요.</div>
+        <div class="card-features">
+          <span class="card-feature">계획중</span>
+        </div>
+        <div class="card-footer">
+          <span>계획중</span>
+          <div class="card-arrow">→</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <footer class="site-footer">
+    <strong>고봉's</strong> Management Portal &nbsp;·&nbsp;
+    데이터는 브라우저 내에서만 처리됩니다 &nbsp;·&nbsp;
+    서버 전송 없음
+  </footer>
+
+</div>
+
+<script>
+// ── 비밀번호 설정 ─────────────────────────────────────────────
+// SHA-256 해시값 (변경 시 https://emn178.github.io/online-tools/sha256.html 사용)
+// 현재 비밀번호: chungyeondl2024!
+const PW_HASH = '03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4';
+const SESSION_KEY = 'gobong_auth';
+let attempts = 0;
+const MAX = 5;
+
+async function sha256(str){
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+  return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+}
+
+async function tryLogin(){
+  if(attempts >= MAX){
+    document.getElementById('login-error').textContent = '시도 횟수 초과. 페이지를 새로고침 하세요.';
+    document.getElementById('login-error').style.display = 'block';
+    return;
+  }
+  const pw = document.getElementById('login-pw').value;
+  if(!pw){ shake(); return; }
+  const hash = await sha256(pw);
+  if(hash === PW_HASH){
+    sessionStorage.setItem(SESSION_KEY, '1');
+    const ls = document.getElementById('login-screen');
+    ls.style.transition = 'opacity .5s';
+    ls.style.opacity = '0';
+    setTimeout(()=>{ ls.style.display='none'; showApp(); }, 500);
+  } else {
+    attempts++;
+    shake();
+    document.getElementById('login-error').style.display = 'block';
+    const left = MAX - attempts;
+    document.getElementById('login-attempts').textContent = left > 0 ? `남은 시도: ${left}회` : '더 이상 시도할 수 없습니다';
+    document.getElementById('login-pw').value = '';
+    document.getElementById('login-pw').focus();
+  }
+}
+
+function shake(){
+  const el = document.getElementById('login-pw');
+  el.classList.remove('shake');
+  void el.offsetWidth;
+  el.classList.add('shake');
+}
+
+function showApp(){
+  const app = document.getElementById('main-app');
+  app.style.display = 'block';
+  app.style.opacity = '0';
+  app.style.transition = 'opacity .4s';
+  setTimeout(()=> app.style.opacity = '1', 10);
+  // 날짜 표시
+  const now = new Date();
+  document.getElementById('today-date').textContent =
+    (now.getMonth()+1) + '/' + now.getDate();
+}
+
+function doLogout(){
+  if(!confirm('로그아웃 하시겠습니까?')) return;
+  sessionStorage.removeItem(SESSION_KEY);
+  location.reload();
+}
+
+// ── 세션 확인 ─────────────────────────────────────────────────
+(function(){
+  if(sessionStorage.getItem(SESSION_KEY) === '1'){
+    document.getElementById('login-screen').style.display = 'none';
+    showApp();
+  } else {
+    setTimeout(()=> document.getElementById('login-pw').focus(), 400);
+  }
+})();
+</script>
+</body>
+</html>

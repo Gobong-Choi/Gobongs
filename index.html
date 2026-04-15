@@ -287,7 +287,6 @@ body{
 </head>
 <body>
 
-<!-- ── 로그인 화면 ─────────────────────────────────────── -->
 <div id="login-screen">
   <div class="login-wrap">
     <div class="login-brand">
@@ -314,7 +313,6 @@ body{
   </div>
 </div>
 
-<!-- ── 메인 앱 ─────────────────────────────────────────── -->
 <div id="main-app">
 
   <header class="site-header">
@@ -335,7 +333,6 @@ body{
 
   <div class="main-content">
 
-    <!-- 환영 배너 -->
     <div class="welcome-banner">
       <div class="welcome-text">
         <h2>안녕하세요, 고봉님 👋</h2>
@@ -343,7 +340,7 @@ body{
       </div>
       <div class="welcome-stats">
         <div class="welcome-stat">
-          <div class="welcome-stat-val" id="app-count">1</div>
+          <div class="welcome-stat-val" id="app-count">2</div>
           <div class="welcome-stat-label">활성 앱</div>
         </div>
         <div class="welcome-stat">
@@ -353,7 +350,6 @@ body{
       </div>
     </div>
 
-    <!-- 업무 도구 섹션 -->
     <div class="section-header">
       <div class="section-title">업무 도구</div>
       <div class="section-sub">자주 사용하는 앱에 빠르게 접근하세요</div>
@@ -361,7 +357,6 @@ body{
 
     <div class="app-grid">
 
-      <!-- LS증권 세무처리 -->
       <a href="./ls-tax/index.html" class="app-card theme-blue">
         <div class="card-top">
           <div class="card-icon-bg"><div class="card-icon">📊</div></div>
@@ -376,30 +371,30 @@ body{
           <span class="card-feature">엑셀 다운로드</span>
         </div>
         <div class="card-footer">
-          <span>마지막 업데이트: 2025</span>
+          <span>최종 업데이트: 2025</span>
           <div class="card-arrow">→</div>
         </div>
       </a>
 
-      <!-- 준비중 카드 1 -->
-      <div class="app-card theme-green coming-soon">
-        <span class="coming-badge">COMING SOON</span>
+      <a href="https://kospi200-otm-monitor-hxvpr7bs5yeoavcjthdjin.streamlit.app/" target="_blank" class="app-card theme-green">
         <div class="card-top">
-          <div class="card-icon-bg"><div class="card-icon">📋</div></div>
-          <span class="card-tag">관리</span>
+          <div class="card-icon-bg"><div class="card-icon">📈</div></div>
+          <span class="card-tag">투자 · 전략</span>
         </div>
-        <div class="card-title">두 번째 앱</div>
-        <div class="card-desc">준비 중입니다. 곧 추가될 예정입니다.</div>
+        <div class="card-title">KOSPI 200 전략 모니터</div>
+        <div class="card-desc">KOSPI 200 지수와 커버드콜 ETF를 실시간 모니터링하여 5% 목표 달성 시 텔레그램 알림을 발송합니다.</div>
         <div class="card-features">
-          <span class="card-feature">준비중</span>
+          <span class="card-feature">지수 실시간 추적</span>
+          <span class="card-feature">5% 달성 알림</span>
+          <span class="card-feature">ETF 수익률 동기화</span>
+          <span class="card-feature">분배락일 표기</span>
         </div>
         <div class="card-footer">
-          <span>개발 예정</span>
+          <span>최종 버전: v8.0</span>
           <div class="card-arrow">→</div>
         </div>
-      </div>
+      </a>
 
-      <!-- 준비중 카드 2 -->
       <div class="app-card theme-purple coming-soon">
         <span class="coming-badge">COMING SOON</span>
         <div class="card-top">
@@ -419,7 +414,6 @@ body{
 
     </div>
 
-    <!-- 추가 예정 섹션 -->
     <div class="section-divider">
       <div class="section-divider-line"></div>
       <div class="section-divider-text">앞으로 추가될 앱</div>
@@ -457,8 +451,6 @@ body{
 
 <script>
 // ── 비밀번호 설정 ─────────────────────────────────────────────
-// SHA-256 해시값 (변경 시 https://emn178.github.io/online-tools/sha256.html 사용)
-// 현재 비밀번호: chungyeondl2024!
 const PW_HASH = '03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4';
 const SESSION_KEY = 'gobong_auth';
 let attempts = 0;

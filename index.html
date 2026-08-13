@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
@@ -204,6 +204,12 @@ body{
 .theme-orange .card-tag{background:#FFF3E0;color:#BF360C}
 .theme-orange:hover{border-color:#FFAB40}
 
+.theme-teal::before{background:linear-gradient(135deg,rgba(0,105,120,.04),rgba(0,77,89,.03))}
+.theme-teal .card-icon-bg{background:linear-gradient(135deg,#E0F2F1,#B2DFDB)}
+.theme-teal .card-icon{color:#00695C}
+.theme-teal .card-tag{background:#E0F2F1;color:#00695C}
+.theme-teal:hover{border-color:#4DB6AC}
+
 /* 준비중 카드 */
 .app-card.coming-soon{cursor:default;opacity:.65}
 .app-card.coming-soon:hover{transform:none;box-shadow:var(--shadow)}
@@ -340,7 +346,7 @@ body{
       </div>
       <div class="welcome-stats">
         <div class="welcome-stat">
-          <div class="welcome-stat-val" id="app-count">2</div>
+          <div class="welcome-stat-val" id="app-count">3</div>
           <div class="welcome-stat-label">활성 앱</div>
         </div>
         <div class="welcome-stat">
@@ -395,22 +401,24 @@ body{
         </div>
       </a>
 
-      <div class="app-card theme-purple coming-soon">
-        <span class="coming-badge">COMING SOON</span>
+      <a href="https://gobong-choi.github.io/onestepcapture/" target="_blank" class="app-card theme-teal">
         <div class="card-top">
-          <div class="card-icon-bg"><div class="card-icon">📈</div></div>
-          <span class="card-tag">분석</span>
+          <div class="card-icon-bg"><div class="card-icon">✂️</div></div>
+          <span class="card-tag">유틸리티</span>
         </div>
-        <div class="card-title">세 번째 앱</div>
-        <div class="card-desc">준비 중입니다. 곧 추가될 예정입니다.</div>
+        <div class="card-title">원스텝캡쳐</div>
+        <div class="card-desc">광고, 로그인, 사용 정보 수집이 전혀 없는 Windows 화면 캡처 도구입니다. 단축키 한 번으로 캡처하고 바로 편집·저장합니다.</div>
         <div class="card-features">
-          <span class="card-feature">준비중</span>
+          <span class="card-feature">영역 · 전체 · 활성창</span>
+          <span class="card-feature">스크롤 캡처</span>
+          <span class="card-feature">편집 · 모자이크</span>
+          <span class="card-feature">광고 없음</span>
         </div>
         <div class="card-footer">
-          <span>개발 예정</span>
+          <span>최종 버전: v1.9.5</span>
           <div class="card-arrow">→</div>
         </div>
-      </div>
+      </a>
 
     </div>
 
@@ -421,13 +429,30 @@ body{
     </div>
 
     <div class="app-grid">
+      <div class="app-card theme-purple coming-soon">
+        <span class="coming-badge">COMING SOON</span>
+        <div class="card-top">
+          <div class="card-icon-bg"><div class="card-icon">📈</div></div>
+          <span class="card-tag">분석</span>
+        </div>
+        <div class="card-title">네 번째 앱</div>
+        <div class="card-desc">준비 중입니다. 곧 추가될 예정입니다.</div>
+        <div class="card-features">
+          <span class="card-feature">준비중</span>
+        </div>
+        <div class="card-footer">
+          <span>개발 예정</span>
+          <div class="card-arrow">→</div>
+        </div>
+      </div>
+
       <div class="app-card theme-orange coming-soon">
         <span class="coming-badge">PLANNED</span>
         <div class="card-top">
           <div class="card-icon-bg"><div class="card-icon">💰</div></div>
           <span class="card-tag">재무</span>
         </div>
-        <div class="card-title">네 번째 앱</div>
+        <div class="card-title">다섯 번째 앱</div>
         <div class="card-desc">추가 예정입니다. 필요한 앱이 있으면 말씀해 주세요.</div>
         <div class="card-features">
           <span class="card-feature">계획중</span>

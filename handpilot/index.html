@@ -104,6 +104,23 @@ section{margin-bottom:34px;scroll-margin-top:80px}
 kbd{font-family:var(--mono);font-size:11.5px;background:var(--surface2);border:1px solid var(--border2);border-bottom-width:2px;border-radius:4px;padding:0 5px;color:var(--text)}
 code.inline{font-family:var(--mono);font-size:12px;background:var(--surface2);border:1px solid var(--border);border-radius:4px;padding:1px 5px;color:var(--indigo)}
 
+/* 설치 파일 받기 */
+.get{display:flex;align-items:center;gap:22px;flex-wrap:wrap;background:linear-gradient(135deg,#EEF2FF,#EBF3FB);border:1px solid #C7D2FE;border-radius:var(--radius-lg);padding:22px 24px;margin-bottom:18px}
+.get-btn{display:inline-flex;align-items:center;gap:10px;background:linear-gradient(135deg,var(--navy),var(--blue));color:#fff;text-decoration:none;font-weight:600;font-size:15px;padding:14px 26px;border-radius:12px;box-shadow:0 4px 14px rgba(31,78,121,.35);transition:transform .1s,opacity .15s;white-space:nowrap}
+.get-btn:hover{opacity:.93}
+.get-btn:active{transform:scale(.98)}
+.get-btn .ic{font-size:20px}
+.get-text{flex:1;min-width:240px;font-size:13px;color:var(--text2)}
+.get-text strong{color:var(--text)}
+.mini-steps{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.mini-steps span{background:#fff;border:1px solid var(--border);border-radius:20px;padding:3px 11px;font-size:12px;color:var(--text)}
+details.more{margin-top:14px;border:1px solid var(--border);border-radius:10px;background:var(--surface)}
+details.more summary{cursor:pointer;padding:11px 14px;font-size:13px;font-weight:600;color:var(--text2);list-style:none}
+details.more summary::-webkit-details-marker{display:none}
+details.more summary::before{content:'▸';display:inline-block;margin-right:8px;transition:transform .15s}
+details.more[open] summary::before{transform:rotate(90deg)}
+details.more .inner{padding:0 14px 14px;font-size:13px;color:var(--text2)}
+
 /* 알림 상자 */
 .note{display:flex;gap:10px;border-radius:10px;padding:12px 14px;font-size:12.5px;line-height:1.65;margin-top:12px}
 .note .ni{font-size:15px;line-height:1.4}
@@ -243,9 +260,9 @@ code.inline{font-family:var(--mono);font-size:12px;background:var(--surface2);bo
       <table class="req">
         <tr><th>Windows 10 / 11</th><td>Windows 10 2004 이상. Mac은 지원하지 않습니다.</td></tr>
         <tr><th>Claude 데스크톱 앱<span class="tag need">직접</span></th><td>앱을 설치하고 <strong>Code 탭을 한 번 열어 두세요.</strong> 그때 Claude Code가 앱 안에 함께 설치됩니다.</td></tr>
-        <tr><th>Git · GitHub CLI<span class="tag need">직접</span></th><td>코드를 내려받고 업데이트할 때 씁니다. 아래 1단계 명령으로 설치합니다.</td></tr>
-        <tr><th>GitHub 로그인<span class="tag need">직접</span></th><td>핸드파일럿 저장소는 <strong>비공개</strong>라 접근 권한이 있는 계정으로 로그인해야 받을 수 있습니다. 로그인은 본인이 직접 합니다.</td></tr>
-        <tr><th>Python<span class="tag auto">자동</span></th><td>없으면 설치 스크립트가 물어본 뒤 winget으로 설치합니다(무료, 관리자 권한 불필요).</td></tr>
+        <tr><th>GitHub 로그인<span class="tag need">직접</span></th><td>핸드파일럿 저장소는 <strong>비공개</strong>라 처음 내려받을 때 로그인 창이 뜹니다. 접근 권한이 있는 계정으로 본인이 직접 로그인하세요.</td></tr>
+        <tr><th>Git<span class="tag auto">자동</span></th><td>코드를 받고 업데이트할 때 씁니다. 없으면 설치 파일이 설치합니다(Windows가 권한을 물으면 [예]).</td></tr>
+        <tr><th>Python · 라이브러리<span class="tag auto">자동</span></th><td>없으면 설치 파일이 설치합니다(무료, 관리자 권한 불필요).</td></tr>
       </table>
     </div>
   </section>
@@ -253,38 +270,51 @@ code.inline{font-family:var(--mono);font-size:12px;background:var(--surface2);bo
   <!-- 3. 설치 -->
   <section id="install">
     <div class="section-title"><span class="num">3</span>설치</div>
-    <div class="section-sub">시작 메뉴에서 <strong>Windows PowerShell</strong>을 열고 차례대로 붙여 넣으세요. 명령 상자 오른쪽 [복사] 버튼을 쓰면 편합니다.</div>
+    <div class="section-sub"><strong>설치 파일 하나를 받아 더블클릭</strong>하면 끝입니다. 중간에 할 일은 GitHub 로그인 한 번뿐입니다.</div>
+
+    <div class="get">
+      <a class="get-btn" href="handpilot-setup.cmd" download="핸드파일럿-설치.cmd"><span class="ic">⬇</span>설치 파일 받기</a>
+      <div class="get-text">
+        <strong>핸드파일럿-설치.cmd</strong> (1KB) — 받은 파일을 더블클릭하세요.
+        <div class="mini-steps"><span>① 받기</span><span>② 더블클릭</span><span>③ GitHub 로그인</span><span>④ "설치 완료!"</span></div>
+      </div>
+    </div>
+
     <div class="card">
       <ol class="steps">
         <li class="step">
-          <h3>Git과 GitHub CLI 설치</h3>
-          <p>이미 있으면 건너뛰어도 됩니다. 설치가 끝나면 <strong>PowerShell 창을 닫고 새로 여세요</strong>(새 명령을 인식하도록).</p>
-          <div class="code">winget install --id Git.Git -e
-winget install --id GitHub.cli -e</div>
+          <h3>설치 파일 받기 → 더블클릭</h3>
+          <p>검은 설치 창이 열리고 자동으로 진행됩니다. Claude 앱 확인 → Git(없으면 설치) → 핸드파일럿 내려받기 → Python·라이브러리 → Claude Code에 등록 → 시작 메뉴 <strong>핸드파일럿 관리</strong> 바로가기까지 만듭니다.</p>
+          <div class="note warn"><span class="ni">⚠️</span><div>
+            처음 보는 파일이라 경고가 나올 수 있습니다. 브라우저가 묻으면 <strong>[유지]</strong>, 실행할 때 "게시자를 확인할 수 없습니다"면 <strong>[실행]</strong>,
+            파란 "Windows의 PC 보호" 창이면 <strong>[추가 정보] → [실행]</strong>, Git을 설치하며 권한을 물으면 <strong>[예]</strong>를 누르세요.</div></div>
         </li>
         <li class="step">
-          <h3>GitHub 로그인</h3>
-          <p>질문에는 차례로 <code class="inline">GitHub.com</code> → <code class="inline">HTTPS</code> → Git 자격 증명 연결 <code class="inline">Yes</code> → 브라우저 로그인을 고르세요.</p>
-          <div class="code">gh auth login</div>
+          <h3>GitHub 로그인 (처음 한 번)</h3>
+          <p>"Connect to GitHub" 창이 뜨면 <strong>Sign in with your browser</strong>를 눌러 로그인하세요. 이 PC에 기억되어 다음부터는 묻지 않습니다(업데이트도 그대로).</p>
         </li>
         <li class="step">
-          <h3>핸드파일럿 내려받기</h3>
-          <p>폴더 위치·이름은 자유입니다(한글·공백 가능). 아래는 사용자 폴더 안 <code class="inline">handpilot</code>에 받는 예입니다.</p>
-          <div class="code">gh repo clone Gobong-Choi/handpilot "$env:USERPROFILE\handpilot"</div>
-        </li>
-        <li class="step">
-          <h3>설치 실행</h3>
-          <p>Python 확인 → 가상환경 → 라이브러리(버전 고정) → 경로 설정 → Claude Code에 플러그인 등록 → 시작 메뉴 바로가기 → 자체 점검까지 한 번에 진행합니다. 여러 번 실행해도 안전합니다.</p>
-          <div class="code">powershell -ExecutionPolicy Bypass -File "$env:USERPROFILE\handpilot\install.ps1"</div>
-        </li>
-        <li class="step">
-          <h3>동작 확인</h3>
-          <p>Claude 앱에서 <strong>새 채팅창</strong>(Code 탭)을 열고 아래처럼 입력합니다. 스크린샷이 돌아오면 설치 성공입니다.</p>
+          <h3>"설치 완료!" 확인 → 새 채팅창에서 시험</h3>
+          <p>마지막에 주간 업데이트 확인(매주 월요일 오전 10시)을 켤지 물어봅니다 — Enter면 켜집니다. 그다음 Claude 앱에서 <strong>새 채팅창</strong>(Code 탭)을 열고 입력해 보세요. 스크린샷이 돌아오면 성공입니다.</p>
           <div class="prompt">/handpilot:handpilot 지금 화면 봐줘</div>
         </li>
       </ol>
-      <div class="note info"><span class="ni">ℹ️</span><div>설치 직후 이미 열려 있던 채팅창에는 핸드파일럿이 보이지 않을 수 있습니다. <strong>새 채팅창</strong>을 열거나 Claude 앱을 완전히 종료(작업 표시줄 트레이 → 종료) 후 다시 실행하세요.</div></div>
-      <div class="note ok"><span class="ni">✅</span><div>권장: 설치 후 시작 메뉴 <strong>핸드파일럿 관리 → 정보 탭 → [켜기 (매주 월요일 오전 10시)]</strong>를 눌러 주간 업데이트 확인을 켜 두세요.</div></div>
+      <div class="note info"><span class="ni">ℹ️</span><div>Claude 앱의 <strong>Code 탭을 한 번도 안 열었다면</strong> 설치 창이 기다리며 안내합니다. 앱에서 Code 탭을 연 뒤 설치 창으로 돌아와 Enter를 누르세요.
+        이미 열려 있던 채팅창에는 핸드파일럿이 안 보일 수 있습니다 — 새 채팅창을 열거나 앱을 트레이에서 완전히 종료 후 다시 실행하세요.</div></div>
+
+      <details class="more">
+        <summary>다른 방법: PowerShell에 한 줄 붙여넣기</summary>
+        <div class="inner">파일을 받기 어려우면 시작 메뉴에서 <strong>Windows PowerShell</strong>을 열고 붙여 넣으세요. 설치 파일과 똑같이 진행됩니다.
+          <div class="code">iwr -useb https://gobong-choi.github.io/Gobongs/handpilot/setup.ps1 -OutFile "$env:TEMP\handpilot-setup.ps1"; powershell -ExecutionPolicy Bypass -File "$env:TEMP\handpilot-setup.ps1"</div>
+        </div>
+      </details>
+      <details class="more">
+        <summary>직접 하나씩 설치 (고급)</summary>
+        <div class="inner">Git이 있고 GitHub에 로그인돼 있다면, 원하는 폴더에 받아서 설치 스크립트를 실행해도 됩니다(폴더 위치·이름 자유, 한글·공백 가능).
+          <div class="code">git clone https://github.com/Gobong-Choi/handpilot.git "$env:USERPROFILE\handpilot"</div>
+          <div class="code">powershell -ExecutionPolicy Bypass -File "$env:USERPROFILE\handpilot\install.ps1"</div>
+        </div>
+      </details>
     </div>
   </section>
 
@@ -350,13 +380,14 @@ powershell -ExecutionPolicy Bypass -File "$env:USERPROFILE\handpilot\update.ps1"
     <div class="card" style="padding:6px 8px">
       <table class="faq">
         <tr><th>증상</th><th>이렇게 하세요</th></tr>
-        <tr><td>새 채팅창에서 핸드파일럿이 안 보임</td><td>Claude 앱을 트레이에서 완전히 종료 후 다시 실행. 그래도 없으면 <code class="inline">install.ps1</code>을 다시 실행</td></tr>
+        <tr><td>새 채팅창에서 핸드파일럿이 안 보임</td><td>Claude 앱을 트레이에서 완전히 종료 후 다시 실행. 그래도 없으면 설치 파일을 한 번 더 실행(여러 번 실행해도 안전)</td></tr>
         <tr><td>모든 동작이 "일시정지"로 거부됨</td><td>화면 구석 표시창에서 [재개](이어서) 또는 [종료](끝내기)를 직접 클릭</td></tr>
         <tr><td>"다른 채팅창이 핸드파일럿을 사용 중"</td><td>그 채팅창의 답변이 끝나면 자동으로 풀립니다. 일시정지 상태라면 표시창에서 [재개]/[종료]</td></tr>
         <tr><td>글자 입력이 "Claude 앱이라 막았습니다"로 거부됨</td><td>맨 앞 창이 Claude 앱입니다. 작업할 창을 작업 표시줄에서 앞으로 가져온 뒤 다시 시키세요</td></tr>
         <tr><td>클릭 위치가 어긋남</td><td>해상도·배율을 바꾼 직후일 수 있습니다. "전체 화면 다시 보고 해줘"라고 시키세요</td></tr>
         <tr><td>업데이트 설치 창의 [지금 설치]가 회색</td><td>이 PC에서 프로그램 파일을 직접 고친 상태입니다. PC 전용 설정은 관리 창 설정 탭(config.local.json)에 저장하세요</td></tr>
-        <tr><td><code class="inline">gh repo clone</code>이 권한 오류</td><td>저장소 접근 권한이 있는 GitHub 계정으로 로그인했는지 <code class="inline">gh auth status</code>로 확인</td></tr>
+        <tr><td>설치 창에서 "내려받기 실패"</td><td>저장소 접근 권한이 있는 GitHub 계정으로 로그인했는지 확인. 다른 계정으로 로그인했다면 Windows <strong>자격 증명 관리자</strong> → Windows 자격 증명에서 <code class="inline">git:https://github.com</code>을 지우고 설치 파일을 다시 실행</td></tr>
+        <tr><td>설치 파일을 더블클릭해도 창이 바로 닫힘</td><td>위의 "PowerShell에 한 줄 붙여넣기" 방법으로 설치하면 오류 내용이 창에 남습니다</td></tr>
       </table>
     </div>
   </section>

@@ -210,6 +210,12 @@ body{
 .theme-teal .card-tag{background:#E0F2F1;color:#00695C}
 .theme-teal:hover{border-color:#4DB6AC}
 
+.theme-indigo::before{background:linear-gradient(135deg,rgba(55,48,163,.04),rgba(49,46,129,.03))}
+.theme-indigo .card-icon-bg{background:linear-gradient(135deg,#EEF2FF,#E0E7FF)}
+.theme-indigo .card-icon{color:#3730A3}
+.theme-indigo .card-tag{background:#EEF2FF;color:#3730A3}
+.theme-indigo:hover{border-color:#A5B4FC}
+
 /* 준비중 카드 */
 .app-card.coming-soon{cursor:default;opacity:.65}
 .app-card.coming-soon:hover{transform:none;box-shadow:var(--shadow)}
@@ -346,7 +352,7 @@ body{
       </div>
       <div class="welcome-stats">
         <div class="welcome-stat">
-          <div class="welcome-stat-val" id="app-count">3</div>
+          <div class="welcome-stat-val" id="app-count">4</div>
           <div class="welcome-stat-label">활성 앱</div>
         </div>
         <div class="welcome-stat">
@@ -420,6 +426,25 @@ body{
         </div>
       </a>
 
+      <a href="./handpilot/index.html" class="app-card theme-indigo">
+        <div class="card-top">
+          <div class="card-icon-bg"><div class="card-icon">🖐️</div></div>
+          <span class="card-tag">AI · 자동화</span>
+        </div>
+        <div class="card-title">핸드파일럿</div>
+        <div class="card-desc">Claude가 화면을 보고 마우스·키보드로 Windows PC를 직접 조작하게 해 주는 Claude Code 플러그인입니다. 설치·업데이트·사용 안내.</div>
+        <div class="card-features">
+          <span class="card-feature">화면 보고 클릭·입력</span>
+          <span class="card-feature">바뀐 부분만 전송</span>
+          <span class="card-feature">만지면 즉시 정지</span>
+          <span class="card-feature">버튼 업데이트</span>
+        </div>
+        <div class="card-footer">
+          <span>최종 버전: v0.2.1</span>
+          <div class="card-arrow">→</div>
+        </div>
+      </a>
+
     </div>
 
     <div class="section-divider">
@@ -435,7 +460,7 @@ body{
           <div class="card-icon-bg"><div class="card-icon">📈</div></div>
           <span class="card-tag">분석</span>
         </div>
-        <div class="card-title">네 번째 앱</div>
+        <div class="card-title">다섯 번째 앱</div>
         <div class="card-desc">준비 중입니다. 곧 추가될 예정입니다.</div>
         <div class="card-features">
           <span class="card-feature">준비중</span>
@@ -452,7 +477,7 @@ body{
           <div class="card-icon-bg"><div class="card-icon">💰</div></div>
           <span class="card-tag">재무</span>
         </div>
-        <div class="card-title">다섯 번째 앱</div>
+        <div class="card-title">여섯 번째 앱</div>
         <div class="card-desc">추가 예정입니다. 필요한 앱이 있으면 말씀해 주세요.</div>
         <div class="card-features">
           <span class="card-feature">계획중</span>

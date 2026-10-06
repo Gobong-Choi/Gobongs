@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>핸드파일럿 설치 안내</title>
+<meta name="description" content="핸드파일럿 — Claude가 화면을 보고 마우스·키보드로 Windows PC를 조작하게 해 주는 개인용 Claude Code 플러그인. 설치·업데이트·사용 안내.">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;600;700&family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap');
+
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#1F4E79;--blue:#2E75B6;--lblue:#D6E4F0;
+  --indigo:#3730A3;--lindigo:#EEF2FF;
+  --green:#1B5E20;--lgreen:#E8F5E9;
+  --amber:#92400E;--lamber:#FEF3C7;
+  --red:#991B1B;--lred:#FEF2F2;
+  --bg:#F0F4F8;--surface:#fff;--surface2:#F8FAFC;
+  --border:#E2E8F0;--border2:#CBD5E1;
+  --text:#1E293B;--text2:#64748B;--text3:#94A3B8;
+  --radius:12px;--radius-lg:16px;
+  --shadow:0 2px 8px rgba(0,0,0,.08);
+  --shadow-lg:0 8px 32px rgba(0,0,0,.12);
+  --mono:'Cascadia Code',Consolas,'D2Coding',monospace;
+}
+html{scroll-behavior:smooth}
+body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;font-size:14px;line-height:1.7}
+
+/* 헤더 (포털 하위 페이지 형식) */
+.site-header{background:linear-gradient(135deg,#0F2942 0%,var(--navy) 100%);box-shadow:0 2px 12px rgba(0,0,0,.2);position:sticky;top:0;z-index:100}
+.site-header-inner{max-width:1080px;margin:0 auto;padding:12px 28px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.header-brand{display:flex;align-items:center;gap:12px;min-width:0}
+.header-icon{width:38px;height:38px;background:rgba(255,255,255,.15);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.header-title{font-size:16px;font-weight:600;color:#fff;letter-spacing:-.2px;line-height:1.3}
+.header-sub{font-size:11.5px;color:rgba(255,255,255,.6);font-weight:300;line-height:1.4}
+.header-right{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.btn-ghost{background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.25);padding:5px 12px;border-radius:6px;font-size:11.5px;font-weight:500;text-decoration:none;transition:background .15s;white-space:nowrap}
+.btn-ghost:hover{background:rgba(255,255,255,.22)}
+.version-pill{font-size:11px;color:#fff;background:rgba(96,165,250,.25);border:1px solid rgba(147,197,253,.45);padding:3px 11px;border-radius:20px;white-space:nowrap}
+
+/* 본문 */
+.main{max-width:1080px;margin:0 auto;padding:32px 28px 8px}
+
+/* 소개 배너 (포털 환영 배너 형식) */
+.hero{background:linear-gradient(135deg,var(--navy) 0%,var(--blue) 100%);border-radius:var(--radius-lg);padding:30px 32px;color:#fff;margin-bottom:22px;display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap;box-shadow:0 4px 20px rgba(31,78,121,.25)}
+.hero-text{flex:1;min-width:280px}
+.hero-text h1{font-family:'Noto Serif KR',serif;font-size:26px;font-weight:700;letter-spacing:-.5px;margin-bottom:6px}
+.hero-text h1 .en{font-family:'Noto Sans KR',sans-serif;font-size:13px;font-weight:300;opacity:.6;margin-left:8px;letter-spacing:1px}
+.hero-text p{font-size:13.5px;opacity:.85;line-height:1.75}
+.hero-stats{display:flex;gap:22px}
+.hero-stat{text-align:center}
+.hero-stat-val{font-size:24px;font-weight:700;line-height:1}
+.hero-stat-label{font-size:10.5px;opacity:.7;margin-top:5px}
+
+/* 목차 */
+.toc{display:flex;gap:4px;background:var(--surface);border-radius:10px;padding:4px;box-shadow:var(--shadow);margin-bottom:26px;overflow-x:auto}
+.toc a{flex:1;min-width:max-content;text-align:center;padding:8px 12px;border-radius:7px;font-size:12px;font-weight:500;color:var(--text2);text-decoration:none;transition:all .15s;white-space:nowrap}
+.toc a:hover{background:var(--surface2);color:var(--text)}
+.toc a.on{background:var(--navy);color:#fff;box-shadow:0 1px 4px rgba(31,78,121,.3)}
+
+/* 섹션 */
+section{margin-bottom:34px;scroll-margin-top:80px}
+.section-title{font-size:20px;font-weight:600;letter-spacing:-.3px;margin-bottom:4px;display:flex;align-items:center;gap:8px}
+.section-title .num{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:8px;background:var(--lblue);color:var(--navy);font-size:13px;font-weight:700}
+.section-sub{font-size:13px;color:var(--text2);margin-bottom:16px}
+
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:22px 24px;box-shadow:var(--shadow)}
+.card + .card{margin-top:14px}
+
+/* 기능 카드 */
+.feature-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:14px}
+.feature{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:20px;box-shadow:var(--shadow)}
+.feature-icon{width:42px;height:42px;border-radius:11px;background:linear-gradient(135deg,#EEF2FF,#E0E7FF);display:flex;align-items:center;justify-content:center;font-size:21px;margin-bottom:12px}
+.feature h3{font-size:14.5px;font-weight:600;margin-bottom:5px;letter-spacing:-.2px}
+.feature p{font-size:12.5px;color:var(--text2);line-height:1.65}
+
+/* 준비물 표 */
+.req{width:100%;border-collapse:collapse;font-size:13px}
+.req th,.req td{text-align:left;padding:11px 12px;border-bottom:1px solid var(--border);vertical-align:top}
+.req th{width:170px;color:var(--text);font-weight:600;white-space:nowrap}
+.req td{color:var(--text2)}
+.req tr:last-child th,.req tr:last-child td{border-bottom:none}
+.tag{display:inline-block;font-size:10.5px;font-weight:600;padding:2px 8px;border-radius:20px;margin-left:6px;vertical-align:1px}
+.tag.auto{background:var(--lgreen);color:var(--green)}
+.tag.need{background:var(--lindigo);color:var(--indigo)}
+
+/* 단계 */
+.steps{list-style:none;counter-reset:step}
+.step{position:relative;padding:0 0 22px 48px;counter-increment:step}
+.step::before{content:counter(step);position:absolute;left:0;top:0;width:32px;height:32px;border-radius:50%;background:var(--navy);color:#fff;font-weight:700;font-size:14px;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 6px rgba(31,78,121,.3)}
+.step::after{content:'';position:absolute;left:15px;top:36px;bottom:4px;width:2px;background:var(--border)}
+.step:last-child{padding-bottom:0}
+.step:last-child::after{display:none}
+.step h3{font-size:15px;font-weight:600;margin:4px 0 4px;letter-spacing:-.2px}
+.step p{font-size:13px;color:var(--text2)}
+.step p + .code, .step .code + p{margin-top:8px}
+
+/* 명령어 상자 */
+.code{position:relative;max-width:100%;background:#0F2942;border-radius:10px;padding:12px 84px 12px 16px;margin-top:8px;color:#E2E8F0;font-family:var(--mono);font-size:12.5px;line-height:1.6;white-space:pre-wrap;overflow-wrap:anywhere}
+.code .c{color:#7DA2C8}
+.copy{position:absolute;top:8px;right:8px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:#fff;font-size:11px;font-family:'Noto Sans KR',sans-serif;padding:4px 10px;border-radius:6px;cursor:pointer;transition:background .15s}
+.copy:hover{background:rgba(255,255,255,.2)}
+.copy.done{background:#16A34A;border-color:#16A34A}
+kbd{font-family:var(--mono);font-size:11.5px;background:var(--surface2);border:1px solid var(--border2);border-bottom-width:2px;border-radius:4px;padding:0 5px;color:var(--text)}
+code.inline{font-family:var(--mono);font-size:12px;background:var(--surface2);border:1px solid var(--border);border-radius:4px;padding:1px 5px;color:var(--indigo)}
+
+/* 알림 상자 */
+.note{display:flex;gap:10px;border-radius:10px;padding:12px 14px;font-size:12.5px;line-height:1.65;margin-top:12px}
+.note .ni{font-size:15px;line-height:1.4}
+.note.info{background:#EBF3FB;color:#1E3A5F;border:1px solid #BFDBFE}
+.note.warn{background:var(--lamber);color:var(--amber);border:1px solid #FDE68A}
+.note.ok{background:var(--lgreen);color:var(--green);border:1px solid #A5D6A7}
+
+/* 두 칸 */
+.two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px}
+.two > *{min-width:0}
+.card h3{font-size:14.5px;font-weight:600;margin-bottom:8px;letter-spacing:-.2px}
+.card ul{list-style:none}
+.card ul li{font-size:13px;color:var(--text2);padding:5px 0 5px 16px;position:relative}
+.card ul li::before{content:'';position:absolute;left:2px;top:13px;width:5px;height:5px;border-radius:50%;background:var(--blue)}
+.card ul li strong{color:var(--text);font-weight:600}
+
+/* 예시 말풍선 */
+.prompt{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:10px 14px;font-size:13px;color:var(--text);margin-top:8px}
+.prompt::before{content:'💬';margin-right:8px}
+
+/* 표시창 그림 */
+.overlay-demo{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+.ov{border-radius:10px;padding:9px 13px;font-size:12px;color:#fff;box-shadow:var(--shadow);display:flex;align-items:center;gap:8px}
+.ov.run{background:#1E3A5F}
+.ov.pause{background:#9A3412}
+.ov .b{background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.3);border-radius:5px;padding:1px 8px;font-size:11px}
+
+/* 문제 해결 표 */
+.faq{width:100%;border-collapse:collapse;font-size:13px}
+.faq th{background:var(--surface2);text-align:left;font-size:12px;font-weight:600;color:var(--text2);padding:9px 12px;border-bottom:1px solid var(--border)}
+.faq td{padding:11px 12px;border-bottom:1px solid var(--border);vertical-align:top;color:var(--text2)}
+.faq td:first-child{color:var(--text);font-weight:500;width:36%}
+.faq tr:last-child td{border-bottom:none}
+
+/* 푸터 */
+.site-footer{text-align:center;padding:28px;font-size:11.5px;color:var(--text3);border-top:1px solid var(--border);margin-top:20px}
+.site-footer strong{color:var(--text2);font-family:'Noto Serif KR',serif}
+.site-footer a{color:var(--text2)}
+
+@media(max-width:720px){
+  .main{padding:20px 16px 4px}
+  .site-header-inner{padding:10px 16px}
+  .header-sub,.version-pill{display:none}
+  .hero{padding:22px 20px}
+  .hero-text h1{font-size:22px}
+  .two{grid-template-columns:1fr}
+  .req th{width:auto;white-space:normal}
+  .card{padding:18px}
+}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="site-header-inner">
+    <div class="header-brand">
+      <div class="header-icon">🖐️</div>
+      <div>
+        <div class="header-title">핸드파일럿 설치 안내</div>
+        <div class="header-sub">Claude가 화면을 보고 마우스·키보드로 PC를 조작하는 Claude Code 플러그인</div>
+      </div>
+    </div>
+    <div class="header-right">
+      <span class="version-pill">v0.2.1</span>
+      <a href="../index.html" class="btn-ghost">← 메인으로</a>
+    </div>
+  </div>
+</header>
+
+<div class="main">
+
+  <div class="hero">
+    <div class="hero-text">
+      <h1>핸드파일럿<span class="en">HANDPILOT</span></h1>
+      <p>Claude Code 채팅창에서 "이 프로그램 열고 ○○ 해줘"라고 시키면,
+         Claude가 <strong>화면을 보고 직접 클릭하고 입력</strong>합니다. 내 PC에서만 동작하는 개인용 도구입니다.</p>
+    </div>
+    <div class="hero-stats">
+      <div class="hero-stat"><div class="hero-stat-val">약 5분</div><div class="hero-stat-label">처음 설치</div></div>
+      <div class="hero-stat"><div class="hero-stat-val">9개</div><div class="hero-stat-label">조작 도구</div></div>
+      <div class="hero-stat"><div class="hero-stat-val">주 1회</div><div class="hero-stat-label">업데이트 확인</div></div>
+    </div>
+  </div>
+
+  <nav class="toc" id="toc">
+    <a href="#about">무엇인가요</a>
+    <a href="#ready">준비물</a>
+    <a href="#install">설치</a>
+    <a href="#use">사용법</a>
+    <a href="#update">업데이트</a>
+    <a href="#help">문제 해결</a>
+  </nav>
+
+  <!-- 1. 소개 -->
+  <section id="about">
+    <div class="section-title"><span class="num">1</span>무엇인가요</div>
+    <div class="section-sub">Claude Code에 "눈(스크린샷)"과 "손(마우스·키보드)"을 달아 주는 MCP 서버 + 사용설명서 묶음입니다.</div>
+    <div class="feature-grid">
+      <div class="feature">
+        <div class="feature-icon">👀</div>
+        <h3>보고, 누르고, 입력</h3>
+        <p>스크린샷으로 화면을 보고 클릭·드래그·글자 입력·단축키·스크롤을 합니다. 작은 글씨는 확대(zoom)해서 읽습니다.</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">🪶</div>
+        <h3>바뀐 부분만 보내기</h3>
+        <p>동작 후 화면이 멈출 때까지 기다렸다가 <strong>바뀐 부분만</strong> 잘라 보냅니다. 매번 전체 화면을 보낼 때보다 이미지 토큰이 크게 줄어듭니다.</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">✋</div>
+        <h3>만지면 바로 멈춤</h3>
+        <p>작업 중에 내가 마우스나 키보드를 만지면 즉시 일시정지. 화면 구석 표시창에서 [재개] 또는 [종료]를 누릅니다.</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">🔒</div>
+        <h3>한 번에 한 채팅창만</h3>
+        <p>여러 채팅창이 동시에 마우스를 잡지 않도록 조작권을 한 곳에만 줍니다. 답변이 끝나면 바로 반납합니다.</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">🛡️</div>
+        <h3>안전 장치</h3>
+        <p>Claude 앱 창 자체는 조작하지 않고, 결제·삭제·전송처럼 되돌리기 어려운 동작은 실행 전에 먼저 물어봅니다.</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">🔄</div>
+        <h3>관리 창 · 자동 업데이트 확인</h3>
+        <p>시작 메뉴 <strong>핸드파일럿 관리</strong>에서 상태 점검·설정·로그를 보고, 새 버전은 [지금 설치] 버튼 하나로 받습니다.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2. 준비물 -->
+  <section id="ready">
+    <div class="section-title"><span class="num">2</span>준비물</div>
+    <div class="section-sub">Windows PC 한 대마다 한 번씩 설치합니다. (핸드파일럿은 설치된 그 PC의 화면만 조작합니다)</div>
+    <div class="card">
+      <table class="req">
+        <tr><th>Windows 10 / 11</th><td>Windows 10 2004 이상. Mac은 지원하지 않습니다.</td></tr>
+        <tr><th>Claude 데스크톱 앱<span class="tag need">직접</span></th><td>앱을 설치하고 <strong>Code 탭을 한 번 열어 두세요.</strong> 그때 Claude Code가 앱 안에 함께 설치됩니다.</td></tr>
+        <tr><th>Git · GitHub CLI<span class="tag need">직접</span></th><td>코드를 내려받고 업데이트할 때 씁니다. 아래 1단계 명령으로 설치합니다.</td></tr>
+        <tr><th>GitHub 로그인<span class="tag need">직접</span></th><td>핸드파일럿 저장소는 <strong>비공개</strong>라 접근 권한이 있는 계정으로 로그인해야 받을 수 있습니다. 로그인은 본인이 직접 합니다.</td></tr>
+        <tr><th>Python<span class="tag auto">자동</span></th><td>없으면 설치 스크립트가 물어본 뒤 winget으로 설치합니다(무료, 관리자 권한 불필요).</td></tr>
+      </table>
+    </div>
+  </section>
+
+  <!-- 3. 설치 -->
+  <section id="install">
+    <div class="section-title"><span class="num">3</span>설치</div>
+    <div class="section-sub">시작 메뉴에서 <strong>Windows PowerShell</strong>을 열고 차례대로 붙여 넣으세요. 명령 상자 오른쪽 [복사] 버튼을 쓰면 편합니다.</div>
+    <div class="card">
+      <ol class="steps">
+        <li class="step">
+          <h3>Git과 GitHub CLI 설치</h3>
+          <p>이미 있으면 건너뛰어도 됩니다. 설치가 끝나면 <strong>PowerShell 창을 닫고 새로 여세요</strong>(새 명령을 인식하도록).</p>
+          <div class="code">winget install --id Git.Git -e
+winget install --id GitHub.cli -e</div>
+        </li>
+        <li class="step">
+          <h3>GitHub 로그인</h3>
+          <p>질문에는 차례로 <code class="inline">GitHub.com</code> → <code class="inline">HTTPS</code> → Git 자격 증명 연결 <code class="inline">Yes</code> → 브라우저 로그인을 고르세요.</p>
+          <div class="code">gh auth login</div>
+        </li>
+        <li class="step">
+          <h3>핸드파일럿 내려받기</h3>
+          <p>폴더 위치·이름은 자유입니다(한글·공백 가능). 아래는 사용자 폴더 안 <code class="inline">handpilot</code>에 받는 예입니다.</p>
+          <div class="code">gh repo clone Gobong-Choi/handpilot "$env:USERPROFILE\handpilot"</div>
+        </li>
+        <li class="step">
+          <h3>설치 실행</h3>
+          <p>Python 확인 → 가상환경 → 라이브러리(버전 고정) → 경로 설정 → Claude Code에 플러그인 등록 → 시작 메뉴 바로가기 → 자체 점검까지 한 번에 진행합니다. 여러 번 실행해도 안전합니다.</p>
+          <div class="code">powershell -ExecutionPolicy Bypass -File "$env:USERPROFILE\handpilot\install.ps1"</div>
+        </li>
+        <li class="step">
+          <h3>동작 확인</h3>
+          <p>Claude 앱에서 <strong>새 채팅창</strong>(Code 탭)을 열고 아래처럼 입력합니다. 스크린샷이 돌아오면 설치 성공입니다.</p>
+          <div class="prompt">/handpilot:handpilot 지금 화면 봐줘</div>
+        </li>
+      </ol>
+      <div class="note info"><span class="ni">ℹ️</span><div>설치 직후 이미 열려 있던 채팅창에는 핸드파일럿이 보이지 않을 수 있습니다. <strong>새 채팅창</strong>을 열거나 Claude 앱을 완전히 종료(작업 표시줄 트레이 → 종료) 후 다시 실행하세요.</div></div>
+      <div class="note ok"><span class="ni">✅</span><div>권장: 설치 후 시작 메뉴 <strong>핸드파일럿 관리 → 정보 탭 → [켜기 (매주 월요일 오전 10시)]</strong>를 눌러 주간 업데이트 확인을 켜 두세요.</div></div>
+    </div>
+  </section>
+
+  <!-- 4. 사용법 -->
+  <section id="use">
+    <div class="section-title"><span class="num">4</span>사용법</div>
+    <div class="section-sub">채팅창에서 평소처럼 말로 시키면 됩니다. "핸드파일럿"이라는 말을 넣거나 <code class="inline">/handpilot:handpilot</code>으로 시작하면 확실합니다.</div>
+    <div class="two">
+      <div class="card">
+        <h3>이렇게 시켜 보세요</h3>
+        <div class="prompt">핸드파일럿으로 지금 화면 보고 뭐가 열려 있는지 알려줘</div>
+        <div class="prompt">/handpilot:handpilot 메모장 열고 "회의 메모"라고 입력해줘</div>
+        <div class="prompt">핸드파일럿으로 크롬에 열린 표에서 합계 숫자 읽어줘</div>
+        <div class="note info"><span class="ni">💡</span><div>작업할 프로그램을 <strong>최대화</strong>해 두면 Claude 채팅창의 변화가 섞이지 않아 더 빠르고 정확합니다.</div></div>
+      </div>
+      <div class="card">
+        <h3>작업 중에는</h3>
+        <ul>
+          <li>화면 구석에 <strong>작동 중 표시창</strong>이 뜹니다(스크린샷에는 찍히지 않음).</li>
+          <li>마우스·키보드를 만지면 <strong>일시정지</strong> → 표시창의 [재개](이어서 하기) 또는 [종료](이 작업 끝내기).</li>
+          <li>[재개]·[종료]는 <strong>사람이 실제로 클릭</strong>해야만 눌립니다.</li>
+          <li>다른 채팅창이 쓰는 중이면 "사용 중" 안내가 나오고 기다립니다.</li>
+        </ul>
+        <div class="overlay-demo">
+          <div class="ov run">▶ 핸드파일럿 작동 중</div>
+          <div class="ov pause">⏸ 일시정지 <span class="b">재개</span><span class="b">종료</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="note warn"><span class="ni">⚠️</span><div>Claude가 보는 화면은 Claude(Anthropic)로 전송됩니다. 고객 개인정보·비밀번호가 보이는 화면에서는 쓰지 않거나, 필요한 창만 띄워 두세요. 비밀번호 입력·결제·송금·삭제는 Claude가 먼저 확인을 받습니다.</div></div>
+  </section>
+
+  <!-- 5. 업데이트 -->
+  <section id="update">
+    <div class="section-title"><span class="num">5</span>업데이트</div>
+    <div class="section-sub">새 버전은 버튼으로 설치합니다. 설치 시점은 항상 내가 고릅니다(자동으로 설치되지 않음).</div>
+    <div class="two">
+      <div class="card">
+        <h3>버튼으로 (권장)</h3>
+        <ul>
+          <li>시작 메뉴 <strong>핸드파일럿 관리 → 상태 탭 → [업데이트 확인]</strong></li>
+          <li>새 버전이 있으면 바뀐 내용과 함께 설치 창이 뜹니다 → <strong>[지금 설치]</strong></li>
+          <li>주간 확인을 켜 두면 <strong>매주 월요일 오전 10시</strong>에 새 버전이 있을 때만 설치 창이 뜹니다. 핸드파일럿이 작업 중이면 끝난 뒤에 뜹니다.</li>
+          <li>새 버전이 있으면 채팅창 결과에도 한 줄 안내가 붙습니다.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>명령으로</h3>
+        <p style="font-size:13px;color:var(--text2)">설치한 폴더의 <code class="inline">update.ps1</code>을 실행합니다.</p>
+        <div class="code"><span class="c"># 새 버전이 있는지만 확인</span>
+powershell -ExecutionPolicy Bypass -File "$env:USERPROFILE\handpilot\update.ps1" -Check</div>
+        <div class="code"><span class="c"># 받아서 적용</span>
+powershell -ExecutionPolicy Bypass -File "$env:USERPROFILE\handpilot\update.ps1"</div>
+      </div>
+    </div>
+    <div class="note info"><span class="ni">ℹ️</span><div>적용 시점: 동작·설정은 바로 / 실행 중인 채팅창은 10분 쉬면 새 코드로 자동 교체 / 새 도구·사용설명서는 <strong>새 채팅창</strong>부터.</div></div>
+  </section>
+
+  <!-- 6. 문제 해결 -->
+  <section id="help">
+    <div class="section-title"><span class="num">6</span>문제 해결</div>
+    <div class="section-sub">먼저 <strong>핸드파일럿 관리 → 상태 탭</strong>(또는 설치 폴더의 <code class="inline">doctor.ps1</code>)으로 점검하세요. 문제 항목과 해결 방법을 알려 줍니다.</div>
+    <div class="card" style="padding:6px 8px">
+      <table class="faq">
+        <tr><th>증상</th><th>이렇게 하세요</th></tr>
+        <tr><td>새 채팅창에서 핸드파일럿이 안 보임</td><td>Claude 앱을 트레이에서 완전히 종료 후 다시 실행. 그래도 없으면 <code class="inline">install.ps1</code>을 다시 실행</td></tr>
+        <tr><td>모든 동작이 "일시정지"로 거부됨</td><td>화면 구석 표시창에서 [재개](이어서) 또는 [종료](끝내기)를 직접 클릭</td></tr>
+        <tr><td>"다른 채팅창이 핸드파일럿을 사용 중"</td><td>그 채팅창의 답변이 끝나면 자동으로 풀립니다. 일시정지 상태라면 표시창에서 [재개]/[종료]</td></tr>
+        <tr><td>글자 입력이 "Claude 앱이라 막았습니다"로 거부됨</td><td>맨 앞 창이 Claude 앱입니다. 작업할 창을 작업 표시줄에서 앞으로 가져온 뒤 다시 시키세요</td></tr>
+        <tr><td>클릭 위치가 어긋남</td><td>해상도·배율을 바꾼 직후일 수 있습니다. "전체 화면 다시 보고 해줘"라고 시키세요</td></tr>
+        <tr><td>업데이트 설치 창의 [지금 설치]가 회색</td><td>이 PC에서 프로그램 파일을 직접 고친 상태입니다. PC 전용 설정은 관리 창 설정 탭(config.local.json)에 저장하세요</td></tr>
+        <tr><td><code class="inline">gh repo clone</code>이 권한 오류</td><td>저장소 접근 권한이 있는 GitHub 계정으로 로그인했는지 <code class="inline">gh auth status</code>로 확인</td></tr>
+      </table>
+    </div>
+  </section>
+
+</div>
+
+<footer class="site-footer">
+  <strong>고봉's</strong> Management Portal &nbsp;·&nbsp; 핸드파일럿 v0.2.1 (2026-10-06) &nbsp;·&nbsp; <a href="../index.html">메인으로</a>
+</footer>
+
+<script>
+// 명령 상자마다 [복사] 버튼 (주석 줄은 빼고 복사)
+document.querySelectorAll('.code').forEach(function(box){
+  var btn = document.createElement('button');
+  btn.className = 'copy'; btn.type = 'button'; btn.textContent = '복사';
+  btn.addEventListener('click', function(){
+    var text = Array.from(box.childNodes)
+      .filter(function(n){ return !(n.nodeType === 1 && (n.classList.contains('copy') || n.classList.contains('c'))); })
+      .map(function(n){ return n.textContent; }).join('')
+      .split('\n').map(function(l){ return l.trimEnd(); }).filter(function(l){ return l; }).join('\n');
+    var done = function(){ btn.textContent = '복사됨 ✓'; btn.classList.add('done');
+      setTimeout(function(){ btn.textContent = '복사'; btn.classList.remove('done'); }, 1600); };
+    if (navigator.clipboard) { navigator.clipboard.writeText(text).then(done); }
+    else { var t = document.createElement('textarea'); t.value = text; document.body.appendChild(t); t.select();
+      document.execCommand('copy'); t.remove(); done(); }
+  });
+  box.appendChild(btn);
+});
+
+// 목차: 보고 있는 섹션 표시
+var links = document.querySelectorAll('#toc a');
+var secs = Array.from(links).map(function(a){ return document.querySelector(a.getAttribute('href')); });
+function mark(){
+  var y = window.scrollY + 120, cur = 0;
+  secs.forEach(function(s, i){ if (s && s.offsetTop <= y) cur = i; });
+  links.forEach(function(a, i){ a.classList.toggle('on', i === cur); });
+}
+window.addEventListener('scroll', mark, {passive:true}); mark();
+</script>
+</body>
+</html>

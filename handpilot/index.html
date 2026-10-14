@@ -201,7 +201,7 @@ details.more .inner{padding:0 14px 14px;font-size:13px;color:var(--text2)}
     <div class="hero-stats">
       <div class="hero-stat"><div class="hero-stat-val">약 5분</div><div class="hero-stat-label">처음 설치</div></div>
       <div class="hero-stat"><div class="hero-stat-val">10개</div><div class="hero-stat-label">조작 도구</div></div>
-      <div class="hero-stat"><div class="hero-stat-val">주 1회</div><div class="hero-stat-label">업데이트 확인</div></div>
+      <div class="hero-stat"><div class="hero-stat-val">자동</div><div class="hero-stat-label">업데이트 (주 1회 확인)</div></div>
     </div>
   </div>
 
@@ -246,8 +246,8 @@ details.more .inner{padding:0 14px 14px;font-size:13px;color:var(--text2)}
       </div>
       <div class="feature">
         <div class="feature-icon">🔄</div>
-        <h3>관리 창 · 자동 업데이트 확인</h3>
-        <p>시작 메뉴 <strong>핸드파일럿 관리</strong>에서 상태 점검·설정·로그를 보고, 새 버전은 [지금 설치] 버튼 하나로 받습니다.</p>
+        <h3>관리 창 · 자동 업데이트</h3>
+        <p>시작 메뉴 <strong>핸드파일럿 관리</strong>에서 상태 점검·설정·로그를 보고, 새 버전은 핸드파일럿을 안 쓸 때 자동으로 설치되고 Windows 알림으로 알려 줍니다.</p>
       </div>
     </div>
   </section>
@@ -295,7 +295,7 @@ details.more .inner{padding:0 14px 14px;font-size:13px;color:var(--text2)}
         </li>
         <li class="step">
           <h3>"설치 완료!" 확인 → 새 채팅창에서 시험</h3>
-          <p>마지막에 주간 업데이트 확인(매주 월요일 오전 10시)을 켤지 물어봅니다 — Enter면 켜집니다. 그다음 Claude 앱에서 <strong>새 채팅창</strong>(Code 탭)을 열고 입력해 보세요. 스크린샷이 돌아오면 성공입니다.</p>
+          <p>마지막에 주간 업데이트 확인(매주 월요일 오전 10시)을 켤지 물어봅니다 — Enter면 켜지고, 새 버전이 나오면 자동으로 설치됩니다. 그다음 Claude 앱에서 <strong>새 채팅창</strong>(Code 탭)을 열고 입력해 보세요. 스크린샷이 돌아오면 성공입니다.</p>
           <div class="prompt">/handpilot:handpilot 지금 화면 봐줘</div>
         </li>
       </ol>
@@ -352,14 +352,16 @@ details.more .inner{padding:0 14px 14px;font-size:13px;color:var(--text2)}
   <!-- 5. 업데이트 -->
   <section id="update">
     <div class="section-title"><span class="num">5</span>업데이트</div>
-    <div class="section-sub">새 버전은 버튼으로 설치합니다. 설치 시점은 항상 내가 고릅니다(자동으로 설치되지 않음).</div>
+    <div class="section-sub">주간 확인을 켜 두면 새 버전이 자동으로 설치됩니다(0.3.3부터). 바로 받고 싶으면 버튼으로도 설치할 수 있습니다.</div>
     <div class="two">
       <div class="card">
-        <h3>버튼으로 (권장)</h3>
+        <h3>자동 · 버튼으로</h3>
         <ul>
           <li>시작 메뉴 <strong>핸드파일럿 관리 → 상태 탭 → [업데이트 확인]</strong></li>
           <li>새 버전이 있으면 바뀐 내용과 함께 설치 창이 뜹니다 → <strong>[지금 설치]</strong></li>
-          <li>주간 확인을 켜 두면 <strong>매주 월요일 오전 10시</strong>에 새 버전이 있을 때만 설치 창이 뜹니다. 핸드파일럿이 작업 중이면 끝난 뒤에 뜹니다.</li>
+          <li>주간 확인을 켜 두면 <strong>매주 월요일 오전 10시</strong>에 새 버전을 확인해, 있으면 <strong>핸드파일럿을 안 쓸 때(마지막 사용 후 약 10분) 자동으로 설치</strong>하고 Windows 알림으로 알려 줍니다. PC가 꺼져 있었으면 켜진 뒤 확인합니다.</li>
+          <li>자동 설치가 싫으면 관리 창 <strong>설정 탭 → 업데이트 → 새 버전 자동 설치</strong>를 끄세요. 그러면 대신 설치 창이 뜹니다.</li>
+          <li>0.3.3보다 예전 버전이면 한 번은 위 버튼으로 직접 설치해야 자동 설치가 시작됩니다.</li>
           <li>새 버전이 있으면 채팅창 결과에도 한 줄 안내가 붙습니다.</li>
         </ul>
       </div>

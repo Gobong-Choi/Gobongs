@@ -82,7 +82,7 @@ try {
 
     # 주간 업데이트 확인 (작업 스케줄러 — 사용자가 고름)
     if (-not $NoPrompt) {
-        $a = Read-Host "`n   매주 월요일 오전 10시에 새 버전을 확인할까요? 새 버전이 있으면 설치 창만 뜹니다 (Y/n)"
+        $a = Read-Host "`n   매주 월요일 오전 10시에 새 버전을 확인할까요? 새 버전이 있으면 핸드파일럿을 안 쓸 때 자동으로 설치합니다 (Y/n)"
         if ($a -notmatch "^[nN]") {
             & powershell -NoProfile -ExecutionPolicy Bypass -File (Join-Path $Dir "scripts\update-check-task.ps1") -Register
         } else {

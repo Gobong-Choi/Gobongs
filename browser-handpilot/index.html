@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>브라우저 핸드파일럿 설치 안내</title>
+<meta name="description" content="브라우저 핸드파일럿 — Claude가 크롬·토르 탭을 사진으로 보고 그 탭 안에서만 클릭·입력하게 해 주는 Claude Code 플러그인. 설치·사용 안내.">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;600;700&family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap');
+
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#1F4E79;--blue:#2E75B6;--lblue:#D6E4F0;
+  --indigo:#3730A3;--lindigo:#EEF2FF;
+  --green:#1B5E20;--lgreen:#E8F5E9;
+  --amber:#92400E;--lamber:#FEF3C7;
+  --red:#991B1B;--lred:#FEF2F2;
+  --bg:#F0F4F8;--surface:#fff;--surface2:#F8FAFC;
+  --border:#E2E8F0;--border2:#CBD5E1;
+  --text:#1E293B;--text2:#64748B;--text3:#94A3B8;
+  --radius:12px;--radius-lg:16px;
+  --shadow:0 2px 8px rgba(0,0,0,.08);
+  --shadow-lg:0 8px 32px rgba(0,0,0,.12);
+  --mono:'Cascadia Code',Consolas,'D2Coding',monospace;
+}
+html{scroll-behavior:smooth}
+body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;font-size:14px;line-height:1.7}
+
+/* 헤더 (포털 하위 페이지 형식) */
+.site-header{background:linear-gradient(135deg,#0F2942 0%,var(--navy) 100%);box-shadow:0 2px 12px rgba(0,0,0,.2);position:sticky;top:0;z-index:100}
+.site-header-inner{max-width:1080px;margin:0 auto;padding:12px 28px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.header-brand{display:flex;align-items:center;gap:12px;min-width:0}
+.header-icon{width:38px;height:38px;background:rgba(255,255,255,.15);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.header-title{font-size:16px;font-weight:600;color:#fff;letter-spacing:-.2px;line-height:1.3}
+.header-sub{font-size:11.5px;color:rgba(255,255,255,.6);font-weight:300;line-height:1.4}
+.header-right{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.btn-ghost{background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.25);padding:5px 12px;border-radius:6px;font-size:11.5px;font-weight:500;text-decoration:none;transition:background .15s;white-space:nowrap}
+.btn-ghost:hover{background:rgba(255,255,255,.22)}
+.version-pill{font-size:11px;color:#fff;background:rgba(96,165,250,.25);border:1px solid rgba(147,197,253,.45);padding:3px 11px;border-radius:20px;white-space:nowrap}
+
+/* 본문 */
+.main{max-width:1080px;margin:0 auto;padding:32px 28px 8px}
+
+/* 소개 배너 (포털 환영 배너 형식) */
+.hero{background:linear-gradient(135deg,var(--navy) 0%,var(--blue) 100%);border-radius:var(--radius-lg);padding:30px 32px;color:#fff;margin-bottom:22px;display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap;box-shadow:0 4px 20px rgba(31,78,121,.25)}
+.hero-text{flex:1;min-width:280px}
+.hero-text h1{font-family:'Noto Serif KR',serif;font-size:26px;font-weight:700;letter-spacing:-.5px;margin-bottom:6px}
+.hero-text h1 .en{font-family:'Noto Sans KR',sans-serif;font-size:13px;font-weight:300;opacity:.6;margin-left:8px;letter-spacing:1px}
+.hero-text p{font-size:13.5px;opacity:.85;line-height:1.75}
+.hero-stats{display:flex;gap:22px}
+.hero-stat{text-align:center}
+.hero-stat-val{font-size:24px;font-weight:700;line-height:1}
+.hero-stat-label{font-size:10.5px;opacity:.7;margin-top:5px}
+
+/* 목차 */
+.toc{display:flex;gap:4px;background:var(--surface);border-radius:10px;padding:4px;box-shadow:var(--shadow);margin-bottom:26px;overflow-x:auto}
+.toc a{flex:1;min-width:max-content;text-align:center;padding:8px 12px;border-radius:7px;font-size:12px;font-weight:500;color:var(--text2);text-decoration:none;transition:all .15s;white-space:nowrap}
+.toc a:hover{background:var(--surface2);color:var(--text)}
+.toc a.on{background:var(--navy);color:#fff;box-shadow:0 1px 4px rgba(31,78,121,.3)}
+
+/* 섹션 */
+section{margin-bottom:34px;scroll-margin-top:80px}
+.section-title{font-size:20px;font-weight:600;letter-spacing:-.3px;margin-bottom:4px;display:flex;align-items:center;gap:8px}
+.section-title .num{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:8px;background:var(--lblue);color:var(--navy);font-size:13px;font-weight:700}
+.section-sub{font-size:13px;color:var(--text2);margin-bottom:16px}
+
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:22px 24px;box-shadow:var(--shadow)}
+.card + .card{margin-top:14px}
+
+/* 기능 카드 */
+.feature-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:14px}
+.feature{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:20px;box-shadow:var(--shadow)}
+.feature-icon{width:42px;height:42px;border-radius:11px;background:linear-gradient(135deg,#EEF2FF,#E0E7FF);display:flex;align-items:center;justify-content:center;font-size:21px;margin-bottom:12px}
+.feature h3{font-size:14.5px;font-weight:600;margin-bottom:5px;letter-spacing:-.2px}
+.feature p{font-size:12.5px;color:var(--text2);line-height:1.65}
+
+/* 준비물 표 */
+.req{width:100%;border-collapse:collapse;font-size:13px}
+.req th,.req td{text-align:left;padding:11px 12px;border-bottom:1px solid var(--border);vertical-align:top}
+.req th{width:170px;color:var(--text);font-weight:600;white-space:nowrap}
+.req td{color:var(--text2)}
+.req tr:last-child th,.req tr:last-child td{border-bottom:none}
+.tag{display:inline-block;font-size:10.5px;font-weight:600;padding:2px 8px;border-radius:20px;margin-left:6px;vertical-align:1px}
+.tag.auto{background:var(--lgreen);color:var(--green)}
+.tag.need{background:var(--lindigo);color:var(--indigo)}
+
+/* 단계 */
+.steps{list-style:none;counter-reset:step}
+.step{position:relative;padding:0 0 22px 48px;counter-increment:step}
+.step::before{content:counter(step);position:absolute;left:0;top:0;width:32px;height:32px;border-radius:50%;background:var(--navy);color:#fff;font-weight:700;font-size:14px;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 6px rgba(31,78,121,.3)}
+.step::after{content:'';position:absolute;left:15px;top:36px;bottom:4px;width:2px;background:var(--border)}
+.step:last-child{padding-bottom:0}
+.step:last-child::after{display:none}
+.step h3{font-size:15px;font-weight:600;margin:4px 0 4px;letter-spacing:-.2px}
+.step p{font-size:13px;color:var(--text2)}
+.step p + .code, .step .code + p{margin-top:8px}
+
+/* 명령어 상자 */
+.code{position:relative;max-width:100%;background:#0F2942;border-radius:10px;padding:12px 84px 12px 16px;margin-top:8px;color:#E2E8F0;font-family:var(--mono);font-size:12.5px;line-height:1.6;white-space:pre-wrap;overflow-wrap:anywhere}
+.code .c{color:#7DA2C8}
+.copy{position:absolute;top:8px;right:8px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:#fff;font-size:11px;font-family:'Noto Sans KR',sans-serif;padding:4px 10px;border-radius:6px;cursor:pointer;transition:background .15s}
+.copy:hover{background:rgba(255,255,255,.2)}
+.copy.done{background:#16A34A;border-color:#16A34A}
+kbd{font-family:var(--mono);font-size:11.5px;background:var(--surface2);border:1px solid var(--border2);border-bottom-width:2px;border-radius:4px;padding:0 5px;color:var(--text)}
+code.inline{font-family:var(--mono);font-size:12px;background:var(--surface2);border:1px solid var(--border);border-radius:4px;padding:1px 5px;color:var(--indigo)}
+
+/* 설치 파일 받기 */
+.get{display:flex;align-items:center;gap:22px;flex-wrap:wrap;background:linear-gradient(135deg,#EEF2FF,#EBF3FB);border:1px solid #C7D2FE;border-radius:var(--radius-lg);padding:22px 24px;margin-bottom:18px}
+.get-btn{display:inline-flex;align-items:center;gap:10px;background:linear-gradient(135deg,var(--navy),var(--blue));color:#fff;text-decoration:none;font-weight:600;font-size:15px;padding:14px 26px;border-radius:12px;box-shadow:0 4px 14px rgba(31,78,121,.35);transition:transform .1s,opacity .15s;white-space:nowrap}
+.get-btn:hover{opacity:.93}
+.get-btn:active{transform:scale(.98)}
+.get-btn .ic{font-size:20px}
+.get-text{flex:1;min-width:240px;font-size:13px;color:var(--text2)}
+.get-text strong{color:var(--text)}
+.mini-steps{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.mini-steps span{background:#fff;border:1px solid var(--border);border-radius:20px;padding:3px 11px;font-size:12px;color:var(--text)}
+details.more{margin-top:14px;border:1px solid var(--border);border-radius:10px;background:var(--surface)}
+details.more summary{cursor:pointer;padding:11px 14px;font-size:13px;font-weight:600;color:var(--text2);list-style:none}
+details.more summary::-webkit-details-marker{display:none}
+details.more summary::before{content:'▸';display:inline-block;margin-right:8px;transition:transform .15s}
+details.more[open] summary::before{transform:rotate(90deg)}
+details.more .inner{padding:0 14px 14px;font-size:13px;color:var(--text2)}
+
+/* 알림 상자 */
+.note{display:flex;gap:10px;border-radius:10px;padding:12px 14px;font-size:12.5px;line-height:1.65;margin-top:12px}
+.note .ni{font-size:15px;line-height:1.4}
+.note.info{background:#EBF3FB;color:#1E3A5F;border:1px solid #BFDBFE}
+.note.warn{background:var(--lamber);color:var(--amber);border:1px solid #FDE68A}
+.note.ok{background:var(--lgreen);color:var(--green);border:1px solid #A5D6A7}
+
+/* 두 칸 */
+.two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px}
+.two > *{min-width:0}
+.card h3{font-size:14.5px;font-weight:600;margin-bottom:8px;letter-spacing:-.2px}
+.card ul{list-style:none}
+.card ul li{font-size:13px;color:var(--text2);padding:5px 0 5px 16px;position:relative}
+.card ul li::before{content:'';position:absolute;left:2px;top:13px;width:5px;height:5px;border-radius:50%;background:var(--blue)}
+.card ul li strong{color:var(--text);font-weight:600}
+
+/* 예시 말풍선 */
+.prompt{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:10px 14px;font-size:13px;color:var(--text);margin-top:8px}
+.prompt::before{content:'💬';margin-right:8px}
+
+/* 표시창 그림 */
+.overlay-demo{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+.ov{border-radius:10px;padding:9px 13px;font-size:12px;color:#fff;box-shadow:var(--shadow);display:flex;align-items:center;gap:8px}
+.ov.run{background:#1E3A5F}
+.ov.pause{background:#9A3412}
+.ov .b{background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.3);border-radius:5px;padding:1px 8px;font-size:11px}
+
+/* 문제 해결 표 */
+.faq{width:100%;border-collapse:collapse;font-size:13px}
+.faq th{background:var(--surface2);text-align:left;font-size:12px;font-weight:600;color:var(--text2);padding:9px 12px;border-bottom:1px solid var(--border)}
+.faq td{padding:11px 12px;border-bottom:1px solid var(--border);vertical-align:top;color:var(--text2)}
+.faq td:first-child{color:var(--text);font-weight:500;width:36%}
+.faq tr:last-child td{border-bottom:none}
+
+/* 푸터 */
+.site-footer{text-align:center;padding:28px;font-size:11.5px;color:var(--text3);border-top:1px solid var(--border);margin-top:20px}
+.site-footer strong{color:var(--text2);font-family:'Noto Serif KR',serif}
+.site-footer a{color:var(--text2)}
+
+@media(max-width:720px){
+  .main{padding:20px 16px 4px}
+  .site-header-inner{padding:10px 16px}
+  .header-sub,.version-pill{display:none}
+  .hero{padding:22px 20px}
+  .hero-text h1{font-size:22px}
+  .two{grid-template-columns:1fr}
+  .req th{width:auto;white-space:normal}
+  .card{padding:18px}
+}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="site-header-inner">
+    <div class="header-brand">
+      <div class="header-icon">🌐</div>
+      <div>
+        <div class="header-title">브라우저 핸드파일럿 설치 안내</div>
+        <div class="header-sub">Claude가 크롬·토르 탭을 사진으로 보고 그 탭 안에서만 조작하는 Claude Code 플러그인</div>
+      </div>
+    </div>
+    <div class="header-right">
+      <span class="version-pill">v0.7.0</span>
+      <a href="../index.html" class="btn-ghost">← 메인으로</a>
+    </div>
+  </div>
+</header>
+
+<div class="main">
+
+  <div class="hero">
+    <div class="hero-text">
+      <h1>브라우저 핸드파일럿<span class="en">BROWSER HAND-PILOT</span></h1>
+      <p>채팅창에서 "크롬으로 구글에서 ○○ 검색해줘"라고 시키면, Claude가 <strong>탭 사진을 보고 그 탭 안에서만</strong> 클릭하고 입력합니다.
+         웹페이지 코드는 읽지 않고, 진짜 마우스·키보드는 움직이지 않아서 그동안 다른 창을 그대로 쓸 수 있습니다.</p>
+    </div>
+    <div class="hero-stats">
+      <div class="hero-stat"><div class="hero-stat-val">약 5분</div><div class="hero-stat-label">처음 설치</div></div>
+      <div class="hero-stat"><div class="hero-stat-val">2개</div><div class="hero-stat-label">브라우저 (크롬·토르)</div></div>
+      <div class="hero-stat"><div class="hero-stat-val">시크릿</div><div class="hero-stat-label">크롬 기본 창</div></div>
+    </div>
+  </div>
+
+  <nav class="toc" id="toc">
+    <a href="#about">무엇인가요</a>
+    <a href="#ready">준비물</a>
+    <a href="#install">설치</a>
+    <a href="#use">사용법</a>
+    <a href="#update">업데이트</a>
+    <a href="#help">문제 해결</a>
+  </nav>
+
+  <section id="about">
+    <div class="section-title"><span class="num">1</span>무엇인가요</div>
+    <div class="section-sub">크롬 확장 + Claude 도구(MCP 서버) 2개 + 스킬 2개 묶음입니다.</div>
+    <div class="feature-grid">
+      <div class="feature"><div class="feature-icon">📸</div><h3>사람처럼 보고 누르기</h3>
+        <p>탭 사진만 보고 위치를 정합니다. 웹페이지 코드를 읽지 않고, 동작 뒤에는 화면이 멈춘 다음의 사진을 받아 결과를 확인합니다.</p></div>
+      <div class="feature"><div class="feature-icon">🗂️</div><h3>탭 안에서만</h3>
+        <p>그 탭에만 클릭·입력이 들어갑니다. 진짜 마우스·키보드는 그대로라 다른 창 작업에 영향이 없습니다.</p></div>
+      <div class="feature"><div class="feature-icon">🕶️</div><h3>크롬은 기본 시크릿</h3>
+        <p>시크릿 창에서 작업합니다. 로그인된 일반 크롬은 "일반 크롬으로 해줘"라고 할 때만, 한 번 확인한 뒤 씁니다.</p></div>
+      <div class="feature"><div class="feature-icon">🏷️</div><h3>채팅마다 탭 그룹</h3>
+        <p>Claude가 조작하는 탭은 "Hand-pilot N" 탭 그룹(색 구분)과 "AI N" 배지가 붙습니다. 크롬은 채팅 4개까지 동시에, 다른 채팅의 탭은 건드리지 않습니다.</p></div>
+      <div class="feature"><div class="feature-icon">🧅</div><h3>토르도</h3>
+        <p>토르 브라우저도 같은 방식으로 조작합니다(한 번에 한 채팅). 꺼져 있으면 Claude가 띄웁니다.</p></div>
+      <div class="feature"><div class="feature-icon">🔐</div><h3>안전 장치</h3>
+        <p>도구와 확장은 컴퓨터마다 따로 만드는 비밀 암호로 서로 확인합니다. 웹페이지는 도구에 접속할 수 없습니다. 로그인·결제·다운로드는 먼저 묻습니다.</p></div>
+    </div>
+  </section>
+
+  <section id="ready">
+    <div class="section-title"><span class="num">2</span>준비물</div>
+    <div class="section-sub">Windows PC 한 대마다 한 번씩 설치합니다.</div>
+    <div class="card">
+      <table class="req">
+        <tr><th>Windows 10 / 11</th><td>Mac은 지원하지 않습니다.</td></tr>
+        <tr><th>Claude 데스크톱 앱<span class="tag need">직접</span></th><td>앱을 설치하고 <strong>Code 탭을 한 번 열어 두세요.</strong></td></tr>
+        <tr><th>크롬<span class="tag need">직접</span></th><td>확장을 올릴 때 <strong>개발자 모드</strong>를 켭니다(회사 정책으로 막힌 PC는 설치 불가).</td></tr>
+        <tr><th>Node.js<span class="tag auto">자동</span></th><td>없으면 설치 파일이 설치합니다(Windows가 권한을 물으면 [예]).</td></tr>
+        <tr><th>Tor Browser<span class="tag need">선택</span></th><td>토르를 쓸 때만. 바탕화면 등에 있으면 자동으로 찾습니다.</td></tr>
+      </table>
+    </div>
+  </section>
+
+  <section id="install">
+    <div class="section-title"><span class="num">3</span>설치</div>
+    <div class="section-sub"><strong>설치 파일을 받아 더블클릭</strong>한 뒤, 크롬에 확장을 한 번 올리면 끝입니다.</div>
+
+    <div class="get">
+      <a class="get-btn" href="browser-handpilot-setup.cmd" download="브라우저핸드파일럿-설치.cmd"><span class="ic">⬇</span>설치 파일 받기</a>
+      <div class="get-text">
+        <strong>브라우저핸드파일럿-설치.cmd</strong> (1KB) — 받은 파일을 더블클릭하세요.
+        <div class="mini-steps"><span>① 받기</span><span>② 더블클릭</span><span>③ 크롬에 확장 올리기</span><span>④ 시크릿 허용</span></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <ol class="steps">
+        <li class="step">
+          <h3>설치 파일 받기 → 더블클릭</h3>
+          <p>Claude 앱 확인 → Node.js(없으면 설치) → 묶음 내려받기 → <code class="inline">사용자 폴더\BrowserHandPilot</code>에 확장·설정·비밀 암호 만들기 → Claude Code에 플러그인 등록까지 자동으로 합니다. 끝나면 확장 폴더가 열립니다.</p>
+          <div class="note warn"><span class="ni">⚠️</span><div>처음 보는 파일이라 경고가 나올 수 있습니다. 브라우저가 묻으면 <strong>[유지]</strong>, 파란 "Windows의 PC 보호" 창이면 <strong>[추가 정보] → [실행]</strong>을 누르세요.</div></div>
+        </li>
+        <li class="step">
+          <h3>크롬에 확장 올리기 (처음 한 번)</h3>
+          <p>크롬 주소창에 아래를 넣고 오른쪽 위 <strong>개발자 모드</strong>를 켭니다. <strong>압축해제된 확장 프로그램을 로드합니다</strong> → <code class="inline">사용자 폴더\BrowserHandPilot\extension</code>을 고릅니다.</p>
+          <div class="code">chrome://extensions</div>
+          <p>카드의 ID가 <code class="inline">kheofijbolmhdnfmplopdgkfcfbmkohn</code>이면 맞습니다.</p>
+        </li>
+        <li class="step">
+          <h3>시크릿 모드 허용</h3>
+          <p>확장 카드의 <strong>세부정보</strong> → <strong>시크릿 모드에서 허용</strong>을 켭니다.</p>
+        </li>
+        <li class="step">
+          <h3>확인</h3>
+          <p>Claude 앱에서 새 채팅을 열고 "크롬 탭 목록 보여줘"라고 합니다. 도구 허용 창이 뜨면 허용하세요. 첫 줄에 <strong>이 채팅의 탭 그룹: Hand-pilot N</strong>이 나오면 성공입니다.</p>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <section id="use">
+    <div class="section-title"><span class="num">4</span>사용법</div>
+    <div class="section-sub">채팅창에서 말로 시키면 됩니다.</div>
+    <div class="two">
+      <div class="card">
+        <h3>이렇게 시켜 보세요</h3>
+        <div class="prompt">크롬으로 구글에서 힘펠 노바 검색해줘</div>
+        <div class="prompt">일반 크롬으로 네이버 들어가서 주문 내역 보여줘</div>
+        <div class="prompt">토르로 DuckDuckGo에서 ○○ 찾아줘</div>
+      </div>
+      <div class="card">
+        <h3>작업 중에는</h3>
+        <ul>
+          <li>조작하는 탭 위에 크롬의 <strong>"디버깅 중" 노란 띠</strong>가 뜹니다. 정상입니다.</li>
+          <li>Claude 탭은 <strong>Hand-pilot N</strong> 그룹에 모입니다. 내 탭은 그대로입니다.</li>
+          <li>네이버 등 일부 사이트는 토르 접속을 막습니다. 그때는 크롬으로 시키세요.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="note warn"><span class="ni">⚠️</span><div>Claude가 보는 탭 사진은 Claude(Anthropic)로 전송됩니다. 일반 크롬은 로그인된 계정 정보가 사진에 찍힐 수 있으니 필요할 때만 쓰세요.</div></div>
+  </section>
+
+  <section id="update">
+    <div class="section-title"><span class="num">5</span>업데이트</div>
+    <div class="section-sub">같은 설치 파일을 다시 더블클릭하면 됩니다. 설정과 비밀 암호는 그대로 두고 코드만 새것으로 바꿉니다.</div>
+    <div class="card"><p>업데이트 뒤에는 크롬 확장 카드의 <strong>새로고침(↻)</strong>을 눌러 주세요.</p></div>
+  </section>
+
+  <section id="help">
+    <div class="section-title"><span class="num">6</span>문제 해결</div>
+    <div class="card">
+      <table class="faq">
+        <tr><th>"크롬 확장프로그램이 연결되지 않았습니다"</th><td>크롬이 켜져 있는지, 확장이 켜져 있는지 확인하고 확장 카드의 새로고침을 누르세요.</td></tr>
+        <tr><th>"비밀 암호 파일이 없습니다"</th><td>설치 파일을 다시 실행한 뒤 확장을 새로고침하세요.</td></tr>
+        <tr><th>"시크릿 모드가 허용되지 않았습니다"</th><td>설치 3단계(시크릿 모드 허용)를 하세요.</td></tr>
+        <tr><th>"이미 설치됨" / 확장을 못 올림</th><td>같은 확장이 이미 올라가 있으면 먼저 삭제하세요. 개발자 모드가 회사 정책으로 막혔다면 쓸 수 없습니다.</td></tr>
+        <tr><th>토르를 못 찾음</th><td><code class="inline">사용자 폴더\BrowserHandPilot\config.json</code>의 <code class="inline">torExe</code>에 토르 폴더의 <code class="inline">Browser\firefox.exe</code> 경로를 적으세요.</td></tr>
+        <tr><th>확장 오류 목록의 ERR_CONNECTION_REFUSED</th><td>Claude 도구가 꺼져 있을 때 나는 정상 기록입니다.</td></tr>
+      </table>
+    </div>
+  </section>
+
+</div>
+
+<footer class="site-footer">
+  <strong>고봉's</strong> Management Portal &nbsp;·&nbsp; 브라우저 핸드파일럿 v0.7.0 (2026-10-26) &nbsp;·&nbsp; <a href="../index.html">메인으로</a>
+</footer>
+
+<script>
+// 명령 상자마다 [복사] 버튼 (주석 줄은 빼고 복사)
+document.querySelectorAll('.code').forEach(function(box){
+  var btn = document.createElement('button');
+  btn.className = 'copy'; btn.type = 'button'; btn.textContent = '복사';
+  btn.addEventListener('click', function(){
+    var text = Array.from(box.childNodes)
+      .filter(function(n){ return !(n.nodeType === 1 && (n.classList.contains('copy') || n.classList.contains('c'))); })
+      .map(function(n){ return n.textContent; }).join('')
+      .split('\n').map(function(l){ return l.trimEnd(); }).filter(function(l){ return l; }).join('\n');
+    var done = function(){ btn.textContent = '복사됨 ✓'; btn.classList.add('done');
+      setTimeout(function(){ btn.textContent = '복사'; btn.classList.remove('done'); }, 1600); };
+    if (navigator.clipboard) { navigator.clipboard.writeText(text).then(done); }
+    else { var t = document.createElement('textarea'); t.value = text; document.body.appendChild(t); t.select();
+      document.execCommand('copy'); t.remove(); done(); }
+  });
+  box.appendChild(btn);
+});
+
+// 목차: 보고 있는 섹션 표시
+var links = document.querySelectorAll('#toc a');
+var secs = Array.from(links).map(function(a){ return document.querySelector(a.getAttribute('href')); });
+function mark(){
+  var y = window.scrollY + 120, cur = 0;
+  secs.forEach(function(s, i){ if (s && s.offsetTop <= y) cur = i; });
+  links.forEach(function(a, i){ a.classList.toggle('on', i === cur); });
+}
+window.addEventListener('scroll', mark, {passive:true}); mark();
+</script>
+</body>
+</html>

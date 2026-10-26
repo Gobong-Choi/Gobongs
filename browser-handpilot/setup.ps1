@@ -21,8 +21,10 @@ function Step([string]$t) { Write-Host "`n== $t" -ForegroundColor Cyan }
 function Ok([string]$t) { Write-Host "   OK  $t" -ForegroundColor Green }
 function Note([string]$t) { Write-Host "   ..  $t" -ForegroundColor Yellow }
 
+# 일반 설치판은 %APPDATA%\Claude, 스토어(MSIX)판은 %LOCALAPPDATA%\Claude-Data\<패키지>\ 아래에 있다(2026-10-26 노트북에서 확인).
+# 앱 안(MSIX 컨테이너)에서 실행하면 이 경로들이 앱 전용 사본으로 바뀌므로, 설치는 앱 밖 PowerShell에서 한다.
 function Find-Claude {
-    Get-ChildItem "$env:APPDATA\Claude\claude-code\*\*\claude.exe" -ErrorAction SilentlyContinue |
+    Get-ChildItem "$env:APPDATA\Claude\claude-code\*\*\claude.exe", "$env:LOCALAPPDATA\Claude-Data\*\claude-code\*\*\claude.exe" -ErrorAction SilentlyContinue |
         Sort-Object { [version]($_.Directory.Parent.Name -replace '[^0-9.]', '') } -ErrorAction SilentlyContinue |
         Select-Object -Last 1
 }

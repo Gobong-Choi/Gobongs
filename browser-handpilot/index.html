@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>브라우저 핸드파일럿 설치 안내</title>
-<meta name="description" content="브라우저 핸드파일럿 — Claude가 크롬·토르 탭을 사진으로 보고 그 탭 안에서만 클릭·입력하게 해 주는 Claude Code 플러그인. 설치·사용 안내.">
+<title>브라우저파일럿 설치 안내</title>
+<meta name="description" content="브라우저파일럿 — Claude가 크롬·Tor 브라우저 탭을 사진으로 보고 그 탭 안에서만 클릭·입력하게 해 주는 Claude 데스크톱 앱용 플러그인. 설치·사용 안내.">
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;600;700&family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap');
 
@@ -179,12 +179,12 @@ details.more .inner{padding:0 14px 14px;font-size:13px;color:var(--text2)}
     <div class="header-brand">
       <div class="header-icon">🌐</div>
       <div>
-        <div class="header-title">브라우저 핸드파일럿 설치 안내</div>
-        <div class="header-sub">Claude가 크롬·토르 탭을 사진으로 보고 그 탭 안에서만 조작하는 Claude Code 플러그인</div>
+        <div class="header-title">브라우저파일럿 설치 안내</div>
+        <div class="header-sub">Claude가 크롬·Tor 브라우저 탭을 사진으로 보고 그 탭 안에서만 조작하는 Claude 데스크톱 앱(Code 탭)용 플러그인</div>
       </div>
     </div>
     <div class="header-right">
-      <span class="version-pill">v0.7.1</span>
+      <span class="version-pill">v0.9.1</span>
       <a href="../index.html" class="btn-ghost">← 메인으로</a>
     </div>
   </div>
@@ -194,14 +194,14 @@ details.more .inner{padding:0 14px 14px;font-size:13px;color:var(--text2)}
 
   <div class="hero">
     <div class="hero-text">
-      <h1>브라우저 핸드파일럿<span class="en">BROWSER HAND-PILOT</span></h1>
-      <p>채팅창에서 "크롬으로 구글에서 ○○ 검색해줘"라고 시키면, Claude가 <strong>탭 사진을 보고 그 탭 안에서만</strong> 클릭하고 입력합니다.
-         웹페이지 코드는 읽지 않고, 진짜 마우스·키보드는 움직이지 않아서 그동안 다른 창을 그대로 쓸 수 있습니다.</p>
+      <h1>브라우저파일럿<span class="en">BROWSER HAND-PILOT</span></h1>
+      <p>사용자가 채팅창에서 "크롬으로 구글에서 ○○ 검색해줘"라고 시키면, Claude가 평소 크롬과 별도로 실행되는 <strong>Claude 작업용 크롬</strong>에서 <strong>탭 화면 사진을 보고 그 탭 안에서만</strong> 클릭하고 입력합니다.
+         Claude는 웹페이지 코드를 읽지 않고, 진짜 마우스·키보드도 움직이지 않아서 사용자는 그동안 다른 창을 그대로 쓸 수 있습니다.</p>
     </div>
     <div class="hero-stats">
       <div class="hero-stat"><div class="hero-stat-val">약 5분</div><div class="hero-stat-label">처음 설치</div></div>
-      <div class="hero-stat"><div class="hero-stat-val">2개</div><div class="hero-stat-label">브라우저 (크롬·토르)</div></div>
-      <div class="hero-stat"><div class="hero-stat-val">시크릿</div><div class="hero-stat-label">크롬 기본 창</div></div>
+      <div class="hero-stat"><div class="hero-stat-val">2개</div><div class="hero-stat-label">브라우저 (크롬·Tor 브라우저)</div></div>
+      <div class="hero-stat"><div class="hero-stat-val">별도 창</div><div class="hero-stat-label">Claude 작업용 크롬</div></div>
     </div>
   </div>
 
@@ -216,20 +216,20 @@ details.more .inner{padding:0 14px 14px;font-size:13px;color:var(--text2)}
 
   <section id="about">
     <div class="section-title"><span class="num">1</span>무엇인가요</div>
-    <div class="section-sub">크롬 확장 + Claude 도구(MCP 서버) 2개 + 스킬 2개 묶음입니다.</div>
+    <div class="section-sub">크롬 확장 프로그램, Claude가 쓰는 기능 2개(크롬용·Tor 브라우저용), 사용 순서 안내 2개가 들어 있는 플러그인입니다.</div>
     <div class="feature-grid">
       <div class="feature"><div class="feature-icon">📸</div><h3>사람처럼 보고 누르기</h3>
-        <p>탭 사진만 보고 위치를 정합니다. 웹페이지 코드를 읽지 않고, 동작 뒤에는 화면이 멈춘 다음의 사진을 받아 결과를 확인합니다.</p></div>
+        <p>Claude가 탭 화면 사진만 보고 누를 위치를 정합니다. 웹페이지 코드는 읽지 않고, 누른 뒤에는 화면 변화가 끝나면 다시 사진을 받아 결과를 확인합니다.</p></div>
       <div class="feature"><div class="feature-icon">🗂️</div><h3>탭 안에서만</h3>
-        <p>그 탭에만 클릭·입력이 들어갑니다. 진짜 마우스·키보드는 그대로라 다른 창 작업에 영향이 없습니다.</p></div>
-      <div class="feature"><div class="feature-icon">🕶️</div><h3>크롬은 기본 시크릿</h3>
-        <p>시크릿 창에서 작업합니다. 로그인된 일반 크롬은 "일반 크롬으로 해줘"라고 할 때만, 한 번 확인한 뒤 씁니다.</p></div>
+        <p>클릭·입력은 그 탭에만 들어갑니다. 진짜 마우스·키보드는 그대로라 사용자가 하던 다른 창 작업에 영향이 없습니다.</p></div>
+      <div class="feature"><div class="feature-icon">🕶️</div><h3>따로 실행되는 Claude 작업용 크롬</h3>
+        <p>Claude가 평소 크롬과 별도로 실행되는 크롬 창을 화면 오른쪽 아래에 띄우고, 그 안의 시크릿 창(방문 기록이 남지 않는 창)에서 일합니다. 이 창은 다른 창 뒤에 가려져도 됩니다. 평소 사용하는 크롬(로그인된 계정)은 사용자가 "평소 크롬으로 해줘"라고 할 때만, Claude가 한 번 확인한 뒤 씁니다.</p></div>
       <div class="feature"><div class="feature-icon">🏷️</div><h3>채팅마다 탭 그룹</h3>
-        <p>Claude가 조작하는 탭은 "Hand-pilot N" 탭 그룹(색 구분)과 "AI N" 배지가 붙습니다. 크롬은 채팅 4개까지 동시에, 다른 채팅의 탭은 건드리지 않습니다.</p></div>
-      <div class="feature"><div class="feature-icon">🧅</div><h3>토르도</h3>
-        <p>토르 브라우저도 같은 방식으로 조작합니다(한 번에 한 채팅). 꺼져 있으면 Claude가 띄웁니다.</p></div>
+        <p>Claude가 연 탭은 "BrowserPilot 1" 같은 이름의 탭 그룹(크롬의 탭 묶음, 채팅마다 색이 다름)에 모이고, 확장 프로그램 아이콘에 "AI1" 같은 표시가 붙습니다. 크롬은 Claude 채팅 4개까지 동시에 쓸 수 있고, Claude는 다른 채팅의 탭을 건드리지 않습니다.</p></div>
+      <div class="feature"><div class="feature-icon">🧅</div><h3>Tor 브라우저도</h3>
+        <p>Claude가 Tor 브라우저도 같은 방식으로 조작합니다(한 번에 한 채팅). Tor 브라우저가 꺼져 있으면 Claude가 띄웁니다.</p></div>
       <div class="feature"><div class="feature-icon">🔐</div><h3>안전 장치</h3>
-        <p>도구와 확장은 컴퓨터마다 따로 만드는 비밀 암호로 서로 확인합니다. 웹페이지는 도구에 접속할 수 없습니다. 로그인·결제·다운로드는 먼저 묻습니다.</p></div>
+        <p>Claude 쪽 프로그램과 크롬 확장 프로그램은 컴퓨터마다 따로 만드는 비밀 암호로 서로 확인합니다. 웹페이지는 이 연결에 끼어들 수 없습니다. 로그인·결제·다운로드는 Claude가 먼저 사용자에게 묻습니다.</p></div>
     </div>
   </section>
 
@@ -239,54 +239,55 @@ details.more .inner{padding:0 14px 14px;font-size:13px;color:var(--text2)}
     <div class="card">
       <table class="req">
         <tr><th>Windows 10 / 11</th><td>Mac은 지원하지 않습니다.</td></tr>
-        <tr><th>Claude 데스크톱 앱<span class="tag need">직접</span></th><td>앱을 설치하고 <strong>Code 탭을 한 번 열어 두세요.</strong></td></tr>
-        <tr><th>크롬<span class="tag need">직접</span></th><td>확장을 올릴 때 <strong>개발자 모드</strong>를 켭니다(회사 정책으로 막힌 PC는 설치 불가).</td></tr>
+        <tr><th>Claude 데스크톱 앱<span class="tag need">직접</span></th><td>사용자가 앱을 설치하고 <strong>Code 탭을 한 번 열어 두세요.</strong></td></tr>
+        <tr><th>크롬<span class="tag need">직접</span></th><td>사용자가 Claude 작업용 크롬에 확장 프로그램을 올릴 때 <strong>개발자 모드</strong>를 켭니다(회사 정책으로 개발자 모드가 막힌 PC는 쓸 수 없습니다).</td></tr>
         <tr><th>Node.js<span class="tag auto">자동</span></th><td>없으면 설치 파일이 설치합니다(Windows가 권한을 물으면 [예]).</td></tr>
-        <tr><th>Tor Browser<span class="tag need">선택</span></th><td>토르를 쓸 때만. 바탕화면 등에 있으면 자동으로 찾습니다.</td></tr>
+        <tr><th>Tor Browser<span class="tag need">선택</span></th><td>Tor 브라우저를 쓸 때만. 바탕화면 등에 있으면 설치 파일이 자동으로 찾습니다.</td></tr>
       </table>
     </div>
   </section>
 
   <section id="install">
     <div class="section-title"><span class="num">3</span>설치</div>
-    <div class="section-sub"><strong>설치 파일을 받아 더블클릭</strong>한 뒤, 크롬에 확장을 한 번 올리면 끝입니다.</div>
+    <div class="section-sub">사용자가 <strong>설치 파일을 받아 더블클릭</strong>한 뒤, Claude 작업용 크롬에 확장 프로그램을 한 번 올리면 끝입니다.</div>
 
     <div class="get">
-      <a class="get-btn" href="browser-handpilot-setup.cmd" download="브라우저핸드파일럿-설치.cmd"><span class="ic">⬇</span>설치 파일 받기</a>
+      <a class="get-btn" href="browser-handpilot-setup.cmd" download="브라우저파일럿-설치.cmd"><span class="ic">⬇</span>설치 파일 받기</a>
       <div class="get-text">
-        <strong>브라우저핸드파일럿-설치.cmd</strong> (1KB) — 받은 파일을 더블클릭하세요.
-        <div class="mini-steps"><span>① 받기</span><span>② 더블클릭</span><span>③ 크롬에 확장 올리기</span><span>④ 시크릿 허용</span></div>
+        <strong>브라우저파일럿-설치.cmd</strong> (1KB) — 받은 파일을 더블클릭하세요.
+        <div class="mini-steps"><span>① 받기</span><span>② 더블클릭</span><span>③ 채팅에서 "크롬으로 구글 열어줘"</span><span>④ 작업용 크롬에 확장 프로그램 올리기</span></div>
       </div>
     </div>
 
     <div class="card">
       <h3>설치 파일이 막힐 때 (스마트 앱 컨트롤)</h3>
       <p>Windows 11에서 "스마트 앱 컨트롤이 … 차단했습니다"가 나오면 <strong>스마트 앱 컨트롤은 끄지 마세요</strong>(끄면 Windows를 새로 설치하기 전에는 다시 못 켭니다).
-         대신 시작 메뉴에서 <strong>PowerShell</strong>을 열고(Claude 앱 안이 아닌 일반 창, 관리자 권한 불필요) 아래 한 줄을 붙여 넣고 Enter를 누르세요. 설치 파일과 똑같이 진행됩니다.</p>
+         대신 사용자가 시작 메뉴에서 <strong>PowerShell</strong>을 열고(Claude 앱 안이 아닌 일반 창, 관리자 권한 불필요) 아래 한 줄을 붙여 넣고 Enter를 누르세요. 설치 파일과 똑같이 진행됩니다.</p>
       <div class="code">$f="$env:TEMP\browser-handpilot-setup.ps1"; iwr -UseBasicParsing https://gobong-choi.github.io/Gobongs/browser-handpilot/setup.ps1 -OutFile $f; powershell -NoProfile -ExecutionPolicy Bypass -File $f</div>
-      <p>무엇을 하는지 먼저 보고 싶으면 <a href="setup.ps1">setup.ps1</a>을 열어 보세요. 끝나면 아래 2단계(크롬에 확장 올리기)부터 이어서 합니다.</p>
+      <p>무엇을 하는지 먼저 보고 싶으면 <a href="setup.ps1">setup.ps1</a>을 열어 보세요. 끝나면 아래 2단계(Claude 작업용 크롬에 확장 프로그램 올리기)부터 이어서 합니다.</p>
     </div>
 
     <div class="card">
       <ol class="steps">
         <li class="step">
           <h3>설치 파일 받기 → 더블클릭</h3>
-          <p>Claude 앱 확인 → Node.js(없으면 설치) → 묶음 내려받기 → <code class="inline">사용자 폴더\BrowserHandPilot</code>에 확장·설정·비밀 암호 만들기 → Claude Code에 플러그인 등록까지 자동으로 합니다. 끝나면 확장 폴더가 열립니다.</p>
+          <p>설치 파일이 Claude 앱 확인 → Node.js(없으면 설치) → 설치용 zip 내려받기 → <code class="inline">사용자 폴더\BrowserHandPilot</code>에 크롬 확장 프로그램·설정·비밀 암호 만들기 → Claude 앱에 플러그인 등록까지 자동으로 합니다. 끝나면 확장 프로그램 폴더가 열립니다.</p>
           <div class="note warn"><span class="ni">⚠️</span><div>처음 보는 파일이라 경고가 나올 수 있습니다. 브라우저가 묻으면 <strong>[유지]</strong>, 파란 "Windows의 PC 보호" 창이면 <strong>[추가 정보] → [실행]</strong>을 누르세요.</div></div>
         </li>
         <li class="step">
-          <h3>크롬에 확장 올리기 (처음 한 번)</h3>
-          <p>크롬 주소창에 아래를 넣고 오른쪽 위 <strong>개발자 모드</strong>를 켭니다. <strong>압축해제된 확장 프로그램을 로드합니다</strong> → <code class="inline">사용자 폴더\BrowserHandPilot\extension</code>을 고릅니다.</p>
-          <div class="code">chrome://extensions</div>
-          <p>카드의 ID가 <code class="inline">kheofijbolmhdnfmplopdgkfcfbmkohn</code>이면 맞습니다.</p>
+          <h3>Claude 작업용 크롬에 확장 프로그램 올리기 (처음 한 번)</h3>
+          <p>① 사용자가 Claude 앱에서 새 채팅을 열고 "크롬으로 구글 열어줘"라고 말합니다. 권한 요청 창이 뜨면 허용하세요.</p>
+          <p>② Claude가 화면 오른쪽 아래에 <strong>Claude 작업용 크롬</strong> 창(북마크·로그인이 없는 새 크롬 창, 첫 탭 제목 "브라우저파일럿 전용 크롬")을 띄우고, 그 창에 확장 프로그램 관리 화면(<code class="inline">chrome://extensions</code>)을 엽니다. 평소 사용하는 크롬에는 아무것도 열리지 않습니다.</p>
+          <p>③ 사용자가 그 Claude 작업용 크롬 창에서 오른쪽 위 <strong>개발자 모드</strong>를 켜고, <strong>압축해제된 확장 프로그램을 로드합니다</strong>를 눌러 <code class="inline">사용자 폴더\BrowserHandPilot\extension</code> 폴더를 고릅니다. 카드의 ID가 <code class="inline">kheofijbolmhdnfmplopdgkfcfbmkohn</code>이면 맞습니다.</p>
         </li>
         <li class="step">
           <h3>시크릿 모드 허용</h3>
-          <p>확장 카드의 <strong>세부정보</strong> → <strong>시크릿 모드에서 허용</strong>을 켭니다.</p>
+          <p>사용자가 같은 Claude 작업용 크롬 창에서 브라우저파일럿 확장 프로그램 카드의 <strong>세부정보</strong>를 열고 <strong>시크릿 모드에서 허용</strong>을 켭니다.</p>
         </li>
         <li class="step">
           <h3>확인</h3>
-          <p>Claude 앱에서 새 채팅을 열고 "크롬 탭 목록 보여줘"라고 합니다. 도구 허용 창이 뜨면 허용하세요. 첫 줄에 <strong>이 채팅의 탭 그룹: Hand-pilot N</strong>이 나오면 성공입니다.</p>
+          <p>사용자가 채팅에서 다시 "크롬으로 구글 열어줘"라고 말합니다. Claude가 Claude 작업용 크롬에 "BrowserPilot 1" 같은 이름의 탭 그룹을 만들고 구글 화면 사진을 보여 주면 성공입니다.</p>
+          <p>(선택) 평소 사용하는 크롬에 로그인된 상태로도 일을 시키려면, 사용자가 평소 사용하는 크롬에서도 2~3단계의 확장 프로그램 올리기를 똑같이 합니다.</p>
         </li>
       </ol>
     </div>
@@ -294,42 +295,46 @@ details.more .inner{padding:0 14px 14px;font-size:13px;color:var(--text2)}
 
   <section id="use">
     <div class="section-title"><span class="num">4</span>사용법</div>
-    <div class="section-sub">채팅창에서 말로 시키면 됩니다.</div>
+    <div class="section-sub">사용자가 채팅창에서 말로 시키면 됩니다.</div>
     <div class="two">
       <div class="card">
         <h3>이렇게 시켜 보세요</h3>
         <div class="prompt">크롬으로 구글에서 힘펠 노바 검색해줘</div>
-        <div class="prompt">일반 크롬으로 네이버 들어가서 주문 내역 보여줘</div>
-        <div class="prompt">토르로 DuckDuckGo에서 ○○ 찾아줘</div>
+        <div class="prompt">평소 크롬으로 네이버 들어가서 주문 내역 보여줘</div>
+        <div class="prompt">Tor 브라우저로 DuckDuckGo에서 ○○ 찾아줘</div>
       </div>
       <div class="card">
         <h3>작업 중에는</h3>
         <ul>
-          <li>조작하는 탭 위에 크롬의 <strong>"디버깅 중" 노란 띠</strong>가 뜹니다. 정상입니다.</li>
-          <li>Claude 탭은 <strong>Hand-pilot N</strong> 그룹에 모입니다. 내 탭은 그대로입니다.</li>
-          <li>네이버 등 일부 사이트는 토르 접속을 막습니다. 그때는 크롬으로 시키세요.</li>
+          <li>Claude가 조작하는 크롬 창 위쪽에 크롬의 <strong>"디버깅을 시작함" 노란 안내 줄</strong>이 뜹니다. 정상입니다(보통은 Claude 작업용 크롬에만 뜹니다).</li>
+          <li>Claude가 연 탭은 <strong>"BrowserPilot 1"</strong> 같은 탭 그룹에 모입니다. 평소 사용하는 크롬의 탭은 그대로입니다.</li>
+          <li>Claude 작업용 크롬 창은 다른 창 뒤에 가려져도 됩니다. 최소화되면 Claude가 원래 크기로 되돌립니다.</li>
+          <li>로그인이 필요한 사이트는 사용자가 Claude 작업용 크롬의 일반 창(시크릿 창이 아닌 창)에서 한 번 직접 로그인해 두면, Claude가 그 로그인 상태를 씁니다.</li>
+          <li>네이버 등 일부 사이트는 Tor 브라우저 접속을 막습니다. 그때는 크롬으로 시키세요.</li>
         </ul>
       </div>
     </div>
-    <div class="note warn"><span class="ni">⚠️</span><div>Claude가 보는 탭 사진은 Claude(Anthropic)로 전송됩니다. 일반 크롬은 로그인된 계정 정보가 사진에 찍힐 수 있으니 필요할 때만 쓰세요.</div></div>
+    <div class="note warn"><span class="ni">⚠️</span><div>Claude가 보는 탭 사진은 Claude(Anthropic)로 전송됩니다. 평소 사용하는 크롬을 쓰면 로그인된 계정 정보가 사진에 찍힐 수 있으니 필요할 때만 쓰세요.</div></div>
   </section>
 
   <section id="update">
     <div class="section-title"><span class="num">5</span>업데이트</div>
-    <div class="section-sub">같은 설치 파일을 다시 더블클릭하면 됩니다. 설정과 비밀 암호는 그대로 두고 코드만 새것으로 바꿉니다.</div>
-    <div class="card"><p>업데이트 뒤에는 크롬 확장 카드의 <strong>새로고침(↻)</strong>을 눌러 주세요.</p></div>
+    <div class="section-sub">사용자가 같은 설치 파일을 다시 더블클릭하면 됩니다. 설정과 비밀 암호는 그대로 두고 코드만 새것으로 바꿉니다.</div>
+    <div class="card"><p>0.8 이상은 다음에 Claude가 크롬을 쓸 때 확장 프로그램이 스스로 새 버전을 불러옵니다. 0.7에서 올리는 경우에만 사용자가 설치 2~3단계(Claude 작업용 크롬에 확장 프로그램 올리기·시크릿 모드 허용)를 한 번 합니다.</p></div>
   </section>
 
   <section id="help">
     <div class="section-title"><span class="num">6</span>문제 해결</div>
     <div class="card">
       <table class="faq">
-        <tr><th>"크롬 확장프로그램이 연결되지 않았습니다"</th><td>크롬이 켜져 있는지, 확장이 켜져 있는지 확인하고 확장 카드의 새로고침을 누르세요.</td></tr>
-        <tr><th>"비밀 암호 파일이 없습니다"</th><td>설치 파일을 다시 실행한 뒤 확장을 새로고침하세요.</td></tr>
+        <tr><th>"전용 크롬에 브라우저파일럿 확장이 연결되지 않았습니다"</th><td>설치 2~3단계(Claude 작업용 크롬 창에 확장 프로그램 올리기)를 하세요. 이미 했으면 그 창의 확장 프로그램 카드에서 새로고침을 누르세요.</td></tr>
+        <tr><th>"사용자 크롬에 브라우저파일럿 확장이 연결되지 않았습니다"</th><td>평소 사용하는 크롬이 켜져 있는지, 거기에 확장 프로그램이 올라가 있는지 확인하세요.</td></tr>
+        <tr><th>크롬(chrome.exe)을 찾지 못했다는 문구</th><td>시작 메뉴 <strong>브라우저파일럿 관리</strong> → 설정의 '크롬 위치'에 chrome.exe 위치를 적으세요.</td></tr>
+        <tr><th>"비밀 암호 파일이 없습니다"</th><td>설치 파일을 다시 실행한 뒤 확장 프로그램 카드에서 새로고침을 누르세요.</td></tr>
         <tr><th>"시크릿 모드가 허용되지 않았습니다"</th><td>설치 3단계(시크릿 모드 허용)를 하세요.</td></tr>
-        <tr><th>"이미 설치됨" / 확장을 못 올림</th><td>같은 확장이 이미 올라가 있으면 먼저 삭제하세요. 개발자 모드가 회사 정책으로 막혔다면 쓸 수 없습니다.</td></tr>
-        <tr><th>토르를 못 찾음</th><td><code class="inline">사용자 폴더\BrowserHandPilot\config.json</code>의 <code class="inline">torExe</code>에 토르 폴더의 <code class="inline">Browser\firefox.exe</code> 경로를 적으세요.</td></tr>
-        <tr><th>확장 오류 목록의 ERR_CONNECTION_REFUSED</th><td>Claude 도구가 꺼져 있을 때 나는 정상 기록입니다.</td></tr>
+        <tr><th>"이미 설치됨" / 확장 프로그램을 못 올림</th><td>같은 확장 프로그램이 이미 올라가 있으면 먼저 삭제하세요. 개발자 모드가 회사 정책으로 막혔다면 쓸 수 없습니다.</td></tr>
+        <tr><th>Tor 브라우저를 못 찾음</th><td>시작 메뉴 <strong>브라우저파일럿 관리</strong> → 설정에 Tor 브라우저 폴더 안의 <code class="inline">Browser\firefox.exe</code> 위치를 적으세요.</td></tr>
+        <tr><th>확장 프로그램 오류 목록의 ERR_CONNECTION_REFUSED</th><td>Claude 채팅이 크롬 기능을 쓰고 있지 않을 때 나는 정상 기록입니다.</td></tr>
       </table>
     </div>
   </section>
@@ -337,7 +342,7 @@ details.more .inner{padding:0 14px 14px;font-size:13px;color:var(--text2)}
 </div>
 
 <footer class="site-footer">
-  <strong>고봉's</strong> Management Portal &nbsp;·&nbsp; 브라우저 핸드파일럿 v0.7.1 (2026-10-26) &nbsp;·&nbsp; <a href="../index.html">메인으로</a>
+  <strong>고봉's</strong> Management Portal &nbsp;·&nbsp; 브라우저파일럿 v0.9.1 (2026-10-27) &nbsp;·&nbsp; <a href="../index.html">메인으로</a>
 </footer>
 
 <script>

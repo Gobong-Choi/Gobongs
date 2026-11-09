@@ -21,7 +21,26 @@ function Step([string]$t) { Write-Host "`n== $t" -ForegroundColor Cyan }
 function Ok([string]$t) { Write-Host "   OK  $t" -ForegroundColor Green }
 function Note([string]$t) { Write-Host "   ..  $t" -ForegroundColor Yellow }
 
-function Find-Claude { Get-ChildItem "$env:APPDATA\Claude\claude-code\*\*\claude.exe" -ErrorAction SilentlyContinue | Select-Object -First 1 }
+function Find-Claude {
+    # Claude 앱 안의 Claude Code(플러그인 등록에 씀). 앱 업데이트로 자리가 바뀌어 와서 여러 곳을 본다 — scripts/common.ps1 Find-ClaudeExe와 같은 순서
+    #  ① 환경 변수 HANDPILOT_CLAUDE(직접 지정) ② 실행 중인 claude.exe 중 claude-code 경로(프로세스 목록 — 앱 폴더 전환과 상관없음)
+    #  ③ %LOCALAPPDATA%\Claude-Data\claude_*\claude-code (2026-11 앱 4.23118에서 확인) ④ %APPDATA%\Claude\claude-code (예전)
+    #  ⑤ %LOCALAPPDATA%\Packages\Claude_*\LocalCache\Roaming\Claude\claude-code (예전 스토어판을 앱 밖에서 볼 때)
+    if ($env:HANDPILOT_CLAUDE -and (Test-Path $env:HANDPILOT_CLAUDE)) { return $env:HANDPILOT_CLAUDE }
+    $paths = @()
+    try {
+        $paths += Get-CimInstance Win32_Process -Filter "Name='claude.exe'" -ErrorAction Stop |
+            Where-Object { $_.ExecutablePath -like '*\claude-code\*' } | ForEach-Object { $_.ExecutablePath }
+    } catch {}
+    foreach ($pat in @("$env:LOCALAPPDATA\Claude-Data\claude_*\claude-code\*\*\claude.exe",
+                       "$env:APPDATA\Claude\claude-code\*\*\claude.exe",
+                       "$env:LOCALAPPDATA\Packages\Claude_*\LocalCache\Roaming\Claude\claude-code\*\*\claude.exe")) {
+        $paths += Get-ChildItem $pat -ErrorAction SilentlyContinue | ForEach-Object { $_.FullName }
+    }
+    $paths | Where-Object { $_ -and (Test-Path $_) } | Sort-Object -Unique |
+        Sort-Object { if ($_ -match '\\claude-code\\([\d.]+)\\') { try { [version]$Matches[1] } catch { [version]"0.0" } } else { [version]"0.0" } } |
+        Select-Object -Last 1
+}
 function Find-Git {
     $g = Get-Command git -ErrorAction SilentlyContinue
     if ($g) { return $g.Source }
@@ -38,8 +57,9 @@ try {
     Step "1/4 Claude 데스크톱 앱"
     while (-not (Find-Claude)) {
         if ($NoPrompt) { throw "Claude 데스크톱 앱(Code 탭)이 필요합니다." }
-        Note "Claude 데스크톱 앱의 Code 탭이 아직 준비되지 않았습니다."
-        Note "Claude 앱을 설치·로그인하고 'Code' 탭을 한 번 연 뒤, 이 창으로 돌아와 Enter를 누르세요."
+        Note "Claude 데스크톱 앱 안의 Claude Code를 찾지 못했습니다."
+        Note "Claude 앱을 설치·로그인하고 'Code' 탭에서 채팅을 하나 연 채로, 이 창으로 돌아와 Enter를 누르세요."
+        Note "계속 안 되면 이 창을 캡처해 Claude에게 보여 주세요(Claude 앱 안의 claude.exe 경로를 환경 변수 HANDPILOT_CLAUDE로 지정하면 됩니다)."
         Read-Host "   준비되면 Enter (그만두려면 창을 닫으세요)" | Out-Null
     }
     Ok "Claude Code 준비됨"

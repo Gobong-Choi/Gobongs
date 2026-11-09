@@ -1,11 +1,12 @@
 ﻿# 핸드파일럿 한 번에 설치 (설치 안내 페이지의 "설치 파일"이 내려받아 실행)
 #
-#   Claude 앱 확인 → Git 확인(없으면 설치) → GitHub에서 내려받기(처음이면 로그인 창) → install.ps1 → 주간 업데이트 확인(선택)
-#   이미 설치돼 있으면 최신 코드를 받고 설치를 다시 확인합니다(여러 번 실행해도 안전).
+#   Claude 앱 확인 → 설치 안내 사이트에서 공개 묶음(zip) 받기(확인값 검사, GitHub·Git 필요 없음) → install.ps1 → 주간 업데이트 확인(선택)
+#   이미 설치돼 있으면 최신으로 맞추고 설치를 다시 확인합니다(여러 번 실행해도 안전).
+#   예전 방식(GitHub clone, 폴더에 .git 있음)으로 설치된 PC는 지금처럼 git으로 받습니다.
 #
 # 원본: handpilot 저장소 web/setup.ps1. 고치면 Gobongs 저장소 handpilot/setup.ps1에도 복사(공개 — 민감 정보 금지).
 # 테스트용: -Dir <폴더>, -SkipPlugin(플러그인 등록·바로가기 건너뜀), -NoPrompt(질문 없음, 주간 확인 안 켬)
-#           또는 환경 변수 HANDPILOT_DIR, HANDPILOT_SETUP_TEST=1 (설치 파일 .cmd로 시험할 때)
+#           또는 환경 변수 HANDPILOT_DIR, HANDPILOT_SETUP_TEST=1 (설치 파일 .cmd로 시험할 때), HANDPILOT_SITE_URL(가짜 사이트)
 
 param(
     [string]$Dir = $(if ($env:HANDPILOT_DIR) { $env:HANDPILOT_DIR } else { Join-Path $env:USERPROFILE "handpilot" }),
@@ -13,7 +14,7 @@ param(
     [switch]$NoPrompt
 )
 
-$Repo = "https://github.com/Gobong-Choi/handpilot.git"
+$Site = if ($env:HANDPILOT_SITE_URL) { $env:HANDPILOT_SITE_URL.TrimEnd("/") } else { "https://gobong-choi.github.io/Gobongs/handpilot" }
 $ErrorActionPreference = "Stop"
 if ($env:HANDPILOT_SETUP_TEST -eq "1") { $SkipPlugin = $true; $NoPrompt = $true }
 
@@ -41,6 +42,36 @@ function Find-Claude {
         Sort-Object { if ($_ -match '\\claude-code\\([\d.]+)\\') { try { [version]$Matches[1] } catch { [version]"0.0" } } else { [version]"0.0" } } |
         Select-Object -Last 1
 }
+function Get-Site([string]$url, [string]$outFile = "") {
+    # 사이트에서 받기(캐시 피하기) — scripts/common.ps1 Invoke-SiteGet과 같은 방식
+    [Net.ServicePointManager]::SecurityProtocol = [Net.ServicePointManager]::SecurityProtocol -bor [Net.SecurityProtocolType]::Tls12
+    $ProgressPreference = "SilentlyContinue"
+    $u = $url + "?nc=" + [DateTime]::UtcNow.Ticks
+    if ($outFile) { Invoke-WebRequest $u -UseBasicParsing -TimeoutSec 300 -OutFile $outFile; return }
+    [Text.Encoding]::UTF8.GetString((Invoke-WebRequest $u -UseBasicParsing -TimeoutSec 30).RawContentStream.ToArray())
+}
+function Install-SiteBundle([string]$dir) {
+    # 공개 묶음을 받아 확인값을 맞춰 보고 설치 폴더에 풀기 — scripts/common.ps1 Install-Bundle과 같은 방식(설정·가상환경은 그대로)
+    $v = Get-Site "$Site/version.json" | ConvertFrom-Json
+    $tmp = Join-Path ([IO.Path]::GetTempPath()) ("handpilot-setup-" + [guid]::NewGuid().ToString("N"))
+    New-Item -ItemType Directory -Force $tmp | Out-Null
+    try {
+        $zip = Join-Path $tmp $v.file
+        Get-Site "$Site/$($v.file)" $zip
+        if ((Get-FileHash $zip -Algorithm SHA256).Hash.ToLower() -ne ([string]$v.sha256).ToLower()) {
+            throw "내려받은 파일의 확인값이 맞지 않습니다(받는 중 손상). 잠시 뒤 다시 실행해 주세요."
+        }
+        Add-Type -AssemblyName System.IO.Compression.FileSystem
+        $x = Join-Path $tmp "x"
+        [IO.Compression.ZipFile]::ExtractToDirectory($zip, $x)
+        Get-ChildItem $x -Recurse -File | ForEach-Object {
+            $dst = Join-Path $dir $_.FullName.Substring($x.Length + 1)
+            New-Item -ItemType Directory -Force (Split-Path $dst) | Out-Null
+            Copy-Item $_.FullName $dst -Force
+        }
+        return $v.version
+    } finally { Remove-Item $tmp -Recurse -Force -ErrorAction SilentlyContinue }
+}
 function Find-Git {
     $g = Get-Command git -ErrorAction SilentlyContinue
     if ($g) { return $g.Source }
@@ -50,11 +81,11 @@ function Find-Git {
 }
 
 Write-Host "핸드파일럿 설치 — 설치 위치: $Dir" -ForegroundColor White
-Write-Host "중간에 GitHub 로그인 창이 뜨면 로그인만 해 주세요. 나머지는 자동으로 진행됩니다."
+Write-Host "설치 안내 사이트에서 최신 버전을 받아 자동으로 설치합니다(처음엔 몇 분)."
 
 try {
     # 1) Claude 앱 (플러그인을 등록할 Claude Code가 앱 안에 있어야 함)
-    Step "1/4 Claude 데스크톱 앱"
+    Step "1/3 Claude 데스크톱 앱"
     while (-not (Find-Claude)) {
         if ($NoPrompt) { throw "Claude 데스크톱 앱(Code 탭)이 필요합니다." }
         Note "Claude 데스크톱 앱 안의 Claude Code를 찾지 못했습니다."
@@ -64,37 +95,27 @@ try {
     }
     Ok "Claude Code 준비됨"
 
-    # 2) Git (코드 받기·업데이트용. 처음 받을 때 GitHub 로그인 창도 Git이 띄움)
-    Step "2/4 Git"
-    $git = Find-Git
-    if (-not $git) {
-        Note "Git이 없어 설치합니다(무료). Windows가 권한을 물으면 '예'를 눌러 주세요."
-        winget install --id Git.Git -e --source winget --accept-source-agreements --accept-package-agreements --silent
-        $env:Path = [Environment]::GetEnvironmentVariable("Path", "Machine") + ";" + [Environment]::GetEnvironmentVariable("Path", "User")
-        $git = Find-Git
-        if (-not $git) { throw "Git 설치를 확인하지 못했습니다. https://git-scm.com 에서 설치한 뒤 다시 실행해 주세요." }
-    }
-    $gitDir = Split-Path $git
-    if (($env:Path -split ";") -notcontains $gitDir) { $env:Path = "$gitDir;$env:Path" }  # 다음 단계(install.ps1)에서도 찾도록
-    Ok "Git: $git"
-
-    # 3) 내려받기
-    Step "3/4 내려받기 (처음이면 GitHub 로그인 창이 뜹니다)"
+    # 2) 내려받기
+    Step "2/3 내려받기"
     if (Test-Path (Join-Path $Dir ".git")) {
+        # 예전 방식(GitHub clone)으로 설치된 PC: 지금처럼 git으로 최신 코드
+        $git = Find-Git
+        if (-not $git) { throw "이 폴더는 GitHub로 설치돼 있는데 Git을 찾지 못했습니다. https://git-scm.com 에서 설치한 뒤 다시 실행해 주세요." }
         & $git -C $Dir pull -q --ff-only
-        if ($LASTEXITCODE -eq 0) { Ok "이미 설치돼 있음 — 최신 코드로 맞춤" }
+        if ($LASTEXITCODE -eq 0) { Ok "이미 설치돼 있음(GitHub) — 최신 코드로 맞춤" }
         else { Note "최신 코드 받기에 실패했습니다 — 지금 있는 코드로 설치를 확인합니다" }
     } else {
-        if ((Test-Path $Dir) -and (Get-ChildItem $Dir -Force | Select-Object -First 1)) {
-            throw "$Dir 폴더가 이미 있고 비어 있지 않습니다. 그 폴더를 옮기거나 이름을 바꾼 뒤 다시 실행해 주세요."
+        $isHandpilot = Test-Path (Join-Path $Dir "handpilot\.claude-plugin\plugin.json")
+        if ((Test-Path $Dir) -and (Get-ChildItem $Dir -Force | Select-Object -First 1) -and -not $isHandpilot) {
+            throw "$Dir 폴더가 이미 있고 핸드파일럿 폴더가 아닙니다. 그 폴더를 옮기거나 이름을 바꾼 뒤 다시 실행해 주세요."
         }
-        & $git clone -q $Repo $Dir
-        if ($LASTEXITCODE -ne 0) { throw "내려받기 실패 — 저장소 접근 권한이 있는 GitHub 계정으로 로그인했는지 확인해 주세요." }
-        Ok "내려받음: $Dir"
+        New-Item -ItemType Directory -Force $Dir | Out-Null
+        $ver = Install-SiteBundle $Dir
+        Ok ($(if ($isHandpilot) { "이미 설치돼 있음 — 최신 $ver 로 맞춤" } else { "내려받음: 버전 $ver → $Dir" }))
     }
 
-    # 4) 설치 (install.ps1 — Python·가상환경·라이브러리·경로·플러그인 등록·바로가기·점검)
-    Step "4/4 설치 (Python·라이브러리·플러그인 등록 — 처음엔 몇 분 걸립니다)"
+    # 3) 설치 (install.ps1 — Python·가상환경·라이브러리·경로·플러그인 등록·바로가기·점검)
+    Step "3/3 설치 (Python·라이브러리·플러그인 등록 — 처음엔 몇 분 걸립니다)"
     $ia = @("-NoProfile", "-ExecutionPolicy", "Bypass", "-File", (Join-Path $Dir "install.ps1"), "-Yes")
     if ($SkipPlugin) { $ia += @("-SkipPlugin", "-NoShortcut") }
     & powershell @ia

@@ -184,7 +184,7 @@ details.more .inner{padding:0 14px 14px;font-size:13px;color:var(--text2)}
       </div>
     </div>
     <div class="header-right">
-      <span class="version-pill">v0.3.5</span>
+      <span class="version-pill">v0.4.0</span>
       <a href="../index.html" class="btn-ghost">← 메인으로</a>
     </div>
   </div>
@@ -260,8 +260,6 @@ details.more .inner{padding:0 14px 14px;font-size:13px;color:var(--text2)}
       <table class="req">
         <tr><th>Windows 10 / 11</th><td>Windows 10 2004 이상. Mac은 지원하지 않습니다.</td></tr>
         <tr><th>Claude 데스크톱 앱<span class="tag need">직접</span></th><td>앱을 설치하고 <strong>Code 탭을 한 번 열어 두세요.</strong> 그때 Claude Code가 앱 안에 함께 설치됩니다.</td></tr>
-        <tr><th>GitHub 로그인<span class="tag need">직접</span></th><td>핸드파일럿 저장소는 <strong>비공개</strong>라 처음 내려받을 때 로그인 창이 뜹니다. 접근 권한이 있는 계정으로 본인이 직접 로그인하세요.</td></tr>
-        <tr><th>Git<span class="tag auto">자동</span></th><td>코드를 받고 업데이트할 때 씁니다. 없으면 설치 파일이 설치합니다(Windows가 권한을 물으면 [예]).</td></tr>
         <tr><th>Python · 라이브러리<span class="tag auto">자동</span></th><td>없으면 설치 파일이 설치합니다(무료, 관리자 권한 불필요).</td></tr>
       </table>
     </div>
@@ -270,13 +268,13 @@ details.more .inner{padding:0 14px 14px;font-size:13px;color:var(--text2)}
   <!-- 3. 설치 -->
   <section id="install">
     <div class="section-title"><span class="num">3</span>설치</div>
-    <div class="section-sub"><strong>설치 파일 하나를 받아 더블클릭</strong>하면 끝입니다. 중간에 할 일은 GitHub 로그인 한 번뿐입니다.</div>
+    <div class="section-sub"><strong>설치 파일 하나를 받아 더블클릭</strong>하면 끝입니다. GitHub 로그인이나 Git 설치 없이 이 사이트에서 바로 받습니다.</div>
 
     <div class="get">
       <a class="get-btn" href="handpilot-setup.cmd" download="핸드파일럿-설치.cmd"><span class="ic">⬇</span>설치 파일 받기</a>
       <div class="get-text">
         <strong>핸드파일럿-설치.cmd</strong> (1KB) — 받은 파일을 더블클릭하세요.
-        <div class="mini-steps"><span>① 받기</span><span>② 더블클릭</span><span>③ GitHub 로그인</span><span>④ "설치 완료!"</span></div>
+        <div class="mini-steps"><span>① 받기</span><span>② 더블클릭</span><span>③ "설치 완료!"</span></div>
       </div>
     </div>
 
@@ -284,14 +282,10 @@ details.more .inner{padding:0 14px 14px;font-size:13px;color:var(--text2)}
       <ol class="steps">
         <li class="step">
           <h3>설치 파일 받기 → 더블클릭</h3>
-          <p>검은 설치 창이 열리고 자동으로 진행됩니다. Claude 앱 확인 → Git(없으면 설치) → 핸드파일럿 내려받기 → Python·라이브러리 → Claude Code에 등록 → 시작 메뉴 <strong>핸드파일럿 관리</strong> 바로가기까지 만듭니다.</p>
+          <p>검은 설치 창이 열리고 자동으로 진행됩니다. Claude 앱 확인 → 핸드파일럿 내려받기(이 사이트에서, 손상·위조 검사) → Python·라이브러리 → Claude Code에 등록 → 시작 메뉴 <strong>핸드파일럿 관리</strong> 바로가기까지 만듭니다.</p>
           <div class="note warn"><span class="ni">⚠️</span><div>
             처음 보는 파일이라 경고가 나올 수 있습니다. 브라우저가 묻으면 <strong>[유지]</strong>, 실행할 때 "게시자를 확인할 수 없습니다"면 <strong>[실행]</strong>,
-            파란 "Windows의 PC 보호" 창이면 <strong>[추가 정보] → [실행]</strong>, Git을 설치하며 권한을 물으면 <strong>[예]</strong>를 누르세요.</div></div>
-        </li>
-        <li class="step">
-          <h3>GitHub 로그인 (처음 한 번)</h3>
-          <p>"Connect to GitHub" 창이 뜨면 <strong>Sign in with your browser</strong>를 눌러 로그인하세요. 이 PC에 기억되어 다음부터는 묻지 않습니다(업데이트도 그대로).</p>
+            파란 "Windows의 PC 보호" 창이면 <strong>[추가 정보] → [실행]</strong>을 누르세요.</div></div>
         </li>
         <li class="step">
           <h3>"설치 완료!" 확인 → 새 채팅창에서 시험</h3>
@@ -310,8 +304,7 @@ details.more .inner{padding:0 14px 14px;font-size:13px;color:var(--text2)}
       </details>
       <details class="more">
         <summary>직접 하나씩 설치 (고급)</summary>
-        <div class="inner">Git이 있고 GitHub에 로그인돼 있다면, 원하는 폴더에 받아서 설치 스크립트를 실행해도 됩니다(폴더 위치·이름 자유, 한글·공백 가능).
-          <div class="code">git clone https://github.com/Gobong-Choi/handpilot.git "$env:USERPROFILE\handpilot"</div>
+        <div class="inner">이 사이트의 최신 묶음(<a href="version.json">version.json</a>의 <code class="inline">file</code>에 적힌 zip)을 받아 원하는 폴더에 풀고 설치 스크립트를 실행해도 됩니다(폴더 위치·이름 자유, 한글·공백 가능).
           <div class="code">powershell -ExecutionPolicy Bypass -File "$env:USERPROFILE\handpilot\install.ps1"</div>
         </div>
       </details>
@@ -390,7 +383,7 @@ powershell -ExecutionPolicy Bypass -File "$env:USERPROFILE\handpilot\update.ps1"
         <tr><td>글자 입력이 "Claude 앱이라 막았습니다"로 거부됨</td><td>맨 앞 창이 Claude 앱입니다. 작업할 창을 작업 표시줄에서 앞으로 가져온 뒤 다시 시키세요</td></tr>
         <tr><td>클릭 위치가 어긋남</td><td>해상도·배율을 바꾼 직후일 수 있습니다. "전체 화면 다시 보고 해줘"라고 시키세요</td></tr>
         <tr><td>업데이트 설치 창의 [지금 설치]가 회색</td><td>이 PC에서 프로그램 파일을 직접 고친 상태입니다. PC 전용 설정은 관리 창 설정 탭(config.local.json)에 저장하세요</td></tr>
-        <tr><td>설치 창에서 "내려받기 실패"</td><td>저장소 접근 권한이 있는 GitHub 계정으로 로그인했는지 확인. 다른 계정으로 로그인했다면 Windows <strong>자격 증명 관리자</strong> → Windows 자격 증명에서 <code class="inline">git:https://github.com</code>을 지우고 설치 파일을 다시 실행</td></tr>
+        <tr><td>설치 창에서 "내려받기" 실패 / "확인값이 맞지 않습니다"</td><td>인터넷 연결을 확인하고 잠시 뒤 설치 파일을 다시 실행하세요(새 버전을 올리는 중이면 몇 분 걸릴 수 있음). 회사 보안 프로그램이 내려받기를 막는지도 확인</td></tr>
         <tr><td>설치 파일을 더블클릭해도 창이 바로 닫힘</td><td>위의 "PowerShell에 한 줄 붙여넣기" 방법으로 설치하면 오류 내용이 창에 남습니다</td></tr>
       </table>
     </div>
@@ -399,7 +392,7 @@ powershell -ExecutionPolicy Bypass -File "$env:USERPROFILE\handpilot\update.ps1"
 </div>
 
 <footer class="site-footer">
-  <strong>고봉's</strong> Management Portal &nbsp;·&nbsp; 핸드파일럿 v0.3.5 (2026-11-09) &nbsp;·&nbsp; <a href="../index.html">메인으로</a>
+  <strong>고봉's</strong> Management Portal &nbsp;·&nbsp; 핸드파일럿 v0.4.0 (2026-11-09) &nbsp;·&nbsp; <a href="../index.html">메인으로</a>
 </footer>
 
 <script>

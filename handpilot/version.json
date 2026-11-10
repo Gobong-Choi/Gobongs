@@ -1,9 +1,9 @@
 {
-    "version":  "0.4.0",
-    "file":  "handpilot-0.4.0.zip",
-    "sha256":  "4c53e61bf42ba7bcec75555914d5de567332022c56a66f869376af55fc915d0a",
-    "size":  105869,
-    "files":  25,
-    "date":  "2026-11-09",
-    "notes":  "GitHub 로그인 없이 설치·업데이트(설치 안내 사이트에서 바로 받기)"
+    "version":  "0.4.1",
+    "file":  "handpilot-0.4.1.zip",
+    "sha256":  "48a25a635beb8ef1e2046bc040d6084dc8aee3cb485daa7eb0e5cf53258e64a3",
+    "size":  110703,
+    "files":  26,
+    "date":  "2026-11-10",
+    "notes":  "작업 표시줄에 이름 없는 \u0027tk\u0027로 뜨던 표시창 수정, 관리 창·설치 창 아이콘"
 }
